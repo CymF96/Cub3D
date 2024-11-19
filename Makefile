@@ -19,6 +19,7 @@ CFILES =	src/cub3d.c\
 			src/cleaning.c\
 			src/game_ctrl.c\
 			src/win_init.c\
+			src/textures.c\
 			src/raycasting.c\
 			src/utils.c
 			
