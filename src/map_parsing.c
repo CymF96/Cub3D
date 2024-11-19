@@ -9,12 +9,12 @@ void	copy_map(t_game *cub, char *line)
 	i = -1;
 	nbr_lines = 0;
 	if (!line || line[0] == '\0')
-		ft_exit("line in copy_map() is NULL", cub);
+		ft_exit("line in copy_map() is NULL", cub, 1);
 	if (cub->map != NULL)
 		nbr_lines = ft_lines_count(cub->map);
 	temp_map = malloc(sizeof(char *) * (nbr_lines + 2));
 	if (temp_map == NULL)
-		ft_exit("malloc of temp_map in copy_map failed", cub);
+		ft_exit("malloc of temp_map in copy_map failed", cub, 1);
 	while (++i < nbr_lines)
 		temp_map[i] = cub->map[i];
 	if (cub->map)
@@ -22,7 +22,7 @@ void	copy_map(t_game *cub, char *line)
 	cub->map = temp_map;
 	cub->map[i++] = ft_strdup(line);
 	if (cub->map[nbr_lines] == NULL)
-		ft_exit("strdup of line in copy_map failed", cub);
+		ft_exit("strdup of line in copy_map failed", cub, 1);
 	cub->map[i] = NULL;
 }
 
@@ -61,7 +61,7 @@ void	ft_copy_color(t_game *cub, int *str, char *line)
 		while (line[i] != '\0' && line[i] != '\n' && line[i] != ',')
 		{
 			if (!ft_isdigit(line[i]))
-				ft_exit("color identifier is incorrect", cub);
+				ft_exit("color identifier is incorrect", cub, 1);
 			i++;
 		}
 		i++;

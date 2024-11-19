@@ -18,14 +18,18 @@ void	*safe_malloc(size_t size, t_game *cub)
 
 	ptr = malloc(size);
 	if (ptr == NULL)
-		ft_exit("malloc failed", cub);
+		ft_exit("malloc failed", cub, 1);
 	return (ptr);
 }
 
-void	ft_exit(const char *str, t_game *cub)
+void	ft_exit(const char *str, t_game *cub, int flag)
 {
-	printf("Error:\n%s\n", str);
+	if (str != NULL)
+		printf("Error:\n%s\n", str);
 	if (cub != NULL)
 		clean_game(cub);
-	exit(EXIT_FAILURE);
+	if (flag == 1)
+		exit(EXIT_FAILURE);
+	else
+		exit(EXIT_SUCCESS);
 }
