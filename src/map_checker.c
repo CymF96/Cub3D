@@ -37,7 +37,7 @@ void	check_color_format(t_game *cub, int	*array)
 	{
 		if (array[i] < 0 || array[i] > 255)
 			ft_exit("RGB format incorrect, please enter color \
-				format in RGB (between 0 and 255)", cub);
+				format in RGB (between 0 and 255)", cub, 1);
 		i++;
 	}
 }
@@ -52,7 +52,7 @@ void	case_with_1(t_game *cub, char *line, int i)
 		j++;
 		if (line[j] != '1' && line[j] != '\n' \
 			&& line[j] != ' ' && line[j] != '\0')
-			ft_exit("map is not closed/surrounded by walls", cub);
+			ft_exit("map is not closed/surrounded by walls", cub, 1);
 	}
 }
 
@@ -68,14 +68,14 @@ void	map_identifiers(t_game *cub, char *line, int i)
 		{
 			if (line[i + 1] == '\n' || line[i + 1] == '\0' \
 				|| line[i + 1] == ' ')
-				ft_exit("map is not closed/surrounded by walls", cub);
+				ft_exit("map is not closed/surrounded by walls", cub, 1);
 		}
 		else if (line[i] == 'N' || line[i] == 'S' \
 					|| line[i] == 'W' || line[i] == 'E')
 			cub->player_pos++;
 		else if (line[i] != ' ' && line[i] != '\n')
 			ft_exit("map identifier not recognised, please \
-				used only 1, 0 or N/S/W/E", cub);
+				used only 1, 0 or N/S/W/E", cub, 1);
 		i++;
 	}
 	copy_map(cub, line);
@@ -101,8 +101,8 @@ void	analyse_line(t_game *cub, char *line)
 	else if (line[i] == '\n')
 		return ;
 	else if (line[i] == '0')
-		ft_exit("map is not closed/surrounded by walls", cub);
+		ft_exit("map is not closed/surrounded by walls", cub, 1);
 	else
-		ft_exit("A format error has been encountered in the map file", cub);
+		ft_exit("A format error has been encountered in the map file", cub, 1);
 	return ;
 }

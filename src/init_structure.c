@@ -11,4 +11,6 @@ void	clean_init(t_game *cub)
 	ft_memset(cub->f, -1, sizeof(cub->f));
 	ft_memset(cub->c, -1, sizeof(cub->c));
 	cub->player_pos = 0;
+	cub->mlx = NULL;
+	cub->mlx_win = NULL;
 }

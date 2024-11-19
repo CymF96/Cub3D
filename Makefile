@@ -17,6 +17,9 @@ CFILES =	src/cub3d.c\
 			src/map_parsing.c\
 			src/map_reading.c\
 			src/cleaning.c\
+			src/game_ctrl.c\
+			src/win_init.c\
+			src/raycasting.c\
 			src/utils.c
 			
 # CFILESB = 

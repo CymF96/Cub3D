@@ -23,10 +23,29 @@ void	free_textures(t_game *cub)
 		free(cub->ea);
 }
 
+void	free_game_struct(t_game *cub)
+{
+	if (cub->mlx_win != NULL)
+	{
+		mlx_destroy_window(cub->mlx, cub->mlx_win);
+		cub->mlx_win = NULL;
+	}
+	if (cub->mlx != NULL)
+	{
+		mlx_destroy_display(cub->mlx);
+		if (cub->mlx != NULL)
+		{
+			free(cub->mlx);
+			cub->mlx = NULL;
+		}
+	}
+}
+
 void	clean_game(t_game *cub)
 {
 	if (cub->map != NULL)
 		clean_map(cub);
 	free_textures(cub);
+	free_game_struct(cub);
 	cub = NULL;
 }
