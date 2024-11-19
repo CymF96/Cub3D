@@ -19,6 +19,8 @@
 # define KEY_S 115
 # define KEY_A 97
 # define KEY_D 100
+# define WIN_W 800
+# define WIN_H 600
 
 typedef enum e_errcode
 {
@@ -34,11 +36,16 @@ typedef enum e_errcode
 
 typedef struct s_img
 {
-	void	*bck;
-	void	*wall;
-	void	*plr;
-	void	*item;
-	void	*exit;
+	void	*tex[5];
+	int		*tex_buf[4];
+	int		tex_size;
+	int		tex_x;
+	int		tex_y;
+	int		*line_lenght[4];
+	int		*bpp[4];
+	int		*endian[4];
+	int		c_color;
+	int		f_color;
 	int		h;
 	int		w;
 }	t_img;
@@ -48,8 +55,15 @@ typedef struct s_game
 	void	*mlx;
 	void	*mlx_win;
 	t_img	img;
+	void	*mlx_img;
+	int		*img_buf;
+	int		bpp;
+	int		line_lenght;
+	int		endian;
 	char		*error;
 	int			player_pos;
+	int			p_posx;
+	int			p_posy;
 	char		**map;
 	char		*no;
 	char		*so;
@@ -61,7 +75,7 @@ typedef struct s_game
 	int			win_h;
 }	t_game;
 
-void	clean_init(t_game *cub);
+void	initialization(t_game *cub);
 void	analyse_line(t_game *cub, char *line);
 void	map_identifiers(t_game *cub, char *line, int i);
 void	case_with_1(t_game *cub, char *line, int i);
@@ -82,6 +96,10 @@ bool	closed_by_walls(t_game *cub);
 int		esc_close_window(int keycode, t_game *cub);
 int		cross_close_window(t_game *cub);
 void	start_game(t_game *cub);
+int		game_mv(int	keycode, t_game *cub);
+void	set_up_color(t_game *cub);
+void	load_textures(t_game *cub);
+void	raycasting(t_game *cub);
 
 
 #endif

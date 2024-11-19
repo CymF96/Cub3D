@@ -18,7 +18,11 @@ void	start_game(t_game *cub)
 		ft_exit("mlx_init failed", cub, 1);
 	generate_window(cub);
 	// draw_map(game);
+	load_textures(cub);
+	set_up_color(cub);
 	mlx_hook(cub->mlx_win, 17, 0, cross_close_window, cub);
 	mlx_key_hook(cub->mlx_win, esc_close_window, cub);
+	raycasting(cub);
+	// mlx_key_hook(cub->mlx_win, game_mv, cub);
 	mlx_loop(cub->mlx);
 }

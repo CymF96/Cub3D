@@ -11,8 +11,33 @@ void	clean_map(t_game *cub)
 	cub->map = NULL;
 }
 
+void	destroy_img(t_game *cub)
+{
+	int i;
+
+	i = -1;
+	while (++i < 4)
+	{
+		if (cub->img.bpp[i] != NULL)
+			free(cub->img.bpp[i]);
+		if (cub->img.line_lenght[i] != NULL)
+			free(cub->img.line_lenght[i]);
+		if (cub->img.endian[i] != NULL)
+			free(cub->img.endian[i]);
+	}
+	i = -1;
+	while (++i < 4)
+	{
+		if (cub->img.tex[i] != NULL)
+			mlx_destroy_image(cub->mlx, cub->img.tex[i]);
+	}
+}
+
 void	free_textures(t_game *cub)
 {
+	destroy_img(cub);
+	if (cub->mlx_img != NULL)
+		mlx_destroy_image(cub->mlx, cub->mlx_img);
 	if (cub->no)
 		free(cub->no);
 	if (cub->so)
