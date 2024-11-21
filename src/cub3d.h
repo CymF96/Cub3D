@@ -11,9 +11,12 @@
 # include <fcntl.h>
 # include <X11/keysym.h>
 # include <X11/X.h>
+# include <float.h>
+# include <limits.h>
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
+# define EPSILON 1e-6
 # define KEY_ESC 65307
 # define KEY_W 119
 # define KEY_S 115
@@ -34,10 +37,39 @@ typedef enum e_errcode
 	I_INPUT,
 }	t_errcode;
 
+typedef struct s_ray
+{
+	double	cam_x;
+	double	cam_y;
+	double	ray_dir_x;
+	double	ray_dir_y;
+	double	dir_x;
+	double	dir_y;
+	double	plane_x;
+	double	plane_y;
+	double	pos_x;
+	double	pos_y;
+	int		map_x; 
+	int		map_y; 
+	double	delta_dist_x;
+	double	delta_dist_y;
+	int		step_x;
+	int		step_y;
+	double	side_dist_x;
+	double	side_dist_y;
+	double	wall_dist;
+	double	wall_x;
+	int		line_h;
+	int		draw_s;
+	int		draw_e;
+	int		side;
+}	t_ray;
+
 typedef struct s_img
 {
 	void	*tex[5];
 	int		*tex_buf[4];
+	int		tex_i;
 	int		tex_size;
 	int		tex_x;
 	int		tex_y;
@@ -55,24 +87,23 @@ typedef struct s_game
 	void	*mlx;
 	void	*mlx_win;
 	t_img	img;
+	t_ray	ray;
 	void	*mlx_img;
 	int		*img_buf;
 	int		bpp;
-	int		line_lenght;
+	int		line_len;
 	int		endian;
-	char		*error;
-	int			player_pos;
-	int			p_posx;
-	int			p_posy;
-	char		**map;
-	char		*no;
-	char		*so;
-	char		*we;
-	char		*ea;
-	int			f[3];
-	int			c[3];
-	int			win_w;
-	int			win_h;
+	int		player_pos;
+	char	p_dir;
+	char	**map;
+	char	*no;
+	char	*so;
+	char	*we;
+	char	*ea;
+	int		f[3];
+	int		c[3];
+	int		win_w;
+	int		win_h;
 }	t_game;
 
 void	initialization(t_game *cub);
