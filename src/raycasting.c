@@ -1,187 +1,288 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/21 11:26:58 by cofische          #+#    #+#             */
+/*   Updated: 2024/11/21 17:46:24 by cofische         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-// function to prepare the raycasting info depending on the player facing position
-// dir_x, dir_y, plane_x, plane_y
-/*
-Facing North (up):
+void    ray_init(t_game *cub)
+{
+    cub->win_h = WIN_H;
+	cub->win_w = WIN_W;
+	cub->ray.cam_x = 0;
+	cub->ray.cam_y = 0;
+	cub->ray.ray_dir_x = 0;
+	cub->ray.ray_dir_y = 0;
+	cub->ray.map_x = (int)cub->ray.pos_x; 
+	cub->ray.map_y = (int)cub->ray.pos_y; 
+	cub->ray.delta_dist_x = 0;
+	cub->ray.delta_dist_y = 0;
+	cub->ray.step_x = 0;
+	cub->ray.step_y = 0;
+	cub->ray.side_dist_x = 0;
+	cub->ray.side_dist_y = 0;
+	cub->ray.wall_dist = 0;
+	cub->ray.wall_x = 0;
+	cub->ray.line_h = 0;
+	cub->ray.draw_s = 0;
+	cub->ray.draw_e = 0;
+	cub->ray.side = 0;
+}
 
-    dir_x = 0, dir_y = -1
-    plane_x = 0.66, plane_y = 0
+void	facing_dir2(t_game *cub)
+{
+	if (cub->p_dir == 'W')
+	{
+		cub->ray.dir_x = -1;
+		cub->ray.dir_y = 0;
+		cub->ray.plane_x = 0;
+		cub->ray.plane_y = -0.66;
+	}
+	else if (cub->p_dir == 'E')
+	{
+		cub->ray.dir_x = 1;
+		cub->ray.dir_y = 0;
+		cub->ray.plane_x = 0;
+		cub->ray.plane_y = 0.66;
+	}
+	else
+		ft_exit("Unknown player facing direction", cub, 1);
+}
 
-Facing South (down):
+void	facing_dir(t_game *cub)
+{
+	if (cub->p_dir == 'N')
+	{
+		cub->ray.dir_x = 0;
+		cub->ray.dir_y = -1;
+		cub->ray.plane_x = 0.66;
+		cub->ray.plane_y = 0;
+	}
+	else if (cub->p_dir == 'S')
+	{
+		cub->ray.dir_x = 0;
+		cub->ray.dir_y = 1;
+		cub->ray.plane_x = -0.66;
+		cub->ray.plane_y = 0;
+	}
+	else
+		facing_dir2(cub);
+}
 
-    dir_x = 0, dir_y = 1
-    plane_x = -0.66, plane_y = 0
+void	zero_value_check(t_game *cub)
+{
+	if (cub->ray.ray_dir_x == 0)
+    	cub->ray.delta_dist_x = FLT_MAX; // or another appropriate value to handle the edge case
+	else 
+    	cub->ray.delta_dist_x = fabs(1 / cub->ray.ray_dir_x);
+	if (cub->ray.ray_dir_y == 0)
+    	cub->ray.delta_dist_y = FLT_MAX; // similarly handle for ray_dir_y
+	else
+    	cub->ray.delta_dist_y = fabs(1 / cub->ray.ray_dir_y);
+}
 
-Facing East (right):
+void	get_delta_distance(t_game *cub, int x)
+{
+	cub->ray.cam_x = 2 * x / (double)WIN_W - 1;
+	cub->ray.ray_dir_x = cub->ray.dir_x + cub->ray.plane_x * cub->ray.cam_x;
+	cub->ray.ray_dir_y = cub->ray.dir_y + cub->ray.plane_y * cub->ray.cam_x;
+	// zero_value_check(cub);
+	if (fabs(cub->ray.ray_dir_x) > EPSILON)
+    	cub->ray.delta_dist_x = fabs(1 / cub->ray.ray_dir_x);
+	else
+    	cub->ray.delta_dist_x = FLT_MAX; // Use FLT_MAX for finite "practically infinite"
+	if (fabs(cub->ray.ray_dir_y) > EPSILON)
+    	cub->ray.delta_dist_y = fabs(1 / cub->ray.ray_dir_y);
+	else
+    	cub->ray.delta_dist_y = FLT_MAX;
+	// printf("x: %d, delta_dist_x: %.2f, delta_dist_y: %.2f, ray_dir_x: %.2f, ray_dir_y: %.2f\n", x, cub->ray.delta_dist_x, cub->ray.delta_dist_y, cub->ray.ray_dir_x, cub->ray.ray_dir_y);
+	if (cub->ray.ray_dir_x == 0)
+	{
+		cub->ray.step_x = 0;
+    	cub->ray.side_dist_x = FLT_MAX;
+	}
+	else if (cub->ray.ray_dir_x < 0)
+	{
+		cub->ray.step_x = -1;
+		cub->ray.side_dist_x = (cub->ray.pos_x - cub->ray.map_x) * cub->ray.delta_dist_x;
+	}
+	else
+	{
+		cub->ray.step_x = 1;
+		cub->ray.side_dist_x = (cub->ray.map_x + 1.0 - cub->ray.pos_x) * cub->ray.delta_dist_x;
+	}
+	if (cub->ray.ray_dir_y == 0)
+	{
+		cub->ray.step_y = 0;
+    	cub->ray.side_dist_y = FLT_MAX;
+	}
+	else if (cub->ray.ray_dir_y < 0)
+	{
+		cub->ray.step_y = -1;
+		cub->ray.side_dist_y = (cub->ray.pos_y - cub->ray.map_y) * cub->ray.delta_dist_y;
+	}
+	else
+	{
+		cub->ray.step_y = 1;
+		cub->ray.side_dist_y = (cub->ray.map_y + 1.0 - cub->ray.pos_y) * cub->ray.delta_dist_y;
+	}
+	// printf("x: %d, pos_x: %.2f, pos_y: %.2f, map_x: %d, map_y: %d,step_x: %.d, step_y: %d, side_dist_x: %.2f, side_dis_y: %.2f\n", x, cub->ray.pos_x, cub->ray.pos_y, cub->ray.map_x, cub->ray.map_y, cub->ray.step_x, cub->ray.step_y, cub->ray.side_dist_y, cub->ray.side_dist_y);
+}
 
-    dir_x = 1, dir_y = 0
-    plane_x = 0, plane_y = 0.66
+void	wall_distance(t_game *cub)
+{
+	// printf("cub->map[%d][%d]: %c\n", cub->ray.map_y, cub->ray.map_x, cub->map[cub->ray.map_y][cub->ray.map_x]);
+	while (cub->map[cub->ray.map_y][cub->ray.map_x] != '1')
+	{
+		if (cub->ray.side_dist_x < cub->ray.side_dist_y)
+		{
+			cub->ray.map_x += cub->ray.step_x;
+			cub->ray.side_dist_x += cub->ray.delta_dist_x;
+			cub->ray.side = 0;
+		}
+		else
+		{
+			cub->ray.map_y += cub->ray.step_y;
+			cub->ray.side_dist_y += cub->ray.delta_dist_y;
+			cub->ray.side = 1;
+		}
+	}
+	// printf("map_x: %d, step_x: %d, side_dist_x: %.2f, delta_dist_x: %.2f\nmap_y: %d, step_y: %d, side_dist_y: %.2f, delta_dist_y: %.2f\n", cub->ray.map_x, cub->ray.step_x, cub->ray.side_dist_x, cub->ray.delta_dist_x, cub->ray.map_y, cub->ray.step_y, cub->ray.side_dist_y, cub->ray.delta_dist_y);
+	if (cub->ray.ray_dir_x == 0)
+    	cub->ray.wall_dist = FLT_MAX;
+	else if (cub->ray.side == 0)
+    	cub->ray.wall_dist = (cub->ray.map_x - cub->ray.pos_x + (1 - cub->ray.step_x) / 2) / cub->ray.ray_dir_x;
+	else
+    	cub->ray.wall_dist = (cub->ray.map_y - cub->ray.pos_y + (1 - cub->ray.step_y) / 2) / cub->ray.ray_dir_y;
+	// printf("side: %d, wall_dist: %.2f\n", cub->ray.side, cub->ray.wall_dist);
+}
 
-Facing West (left):
+void	draw_wall(t_game *cub)
+{
+	cub->ray.draw_s = -cub->ray.line_h / 2 + WIN_H / 2;
+	if (cub->ray.draw_s < 0)
+		cub->ray.draw_s = 0;
+	cub->ray.draw_e = cub->ray.line_h / 2 + WIN_H / 2;
+	if (cub->ray.draw_e >= WIN_H)
+		cub->ray.draw_e = WIN_H - 1;
+	if (cub->ray.side == 0)
+		cub->ray.wall_x = cub->ray.pos_y + cub->ray.wall_dist * cub->ray.ray_dir_y;
+	else
+		cub->ray.wall_x = cub->ray.pos_x + cub->ray.wall_dist * cub->ray.ray_dir_x;
+	cub->ray.wall_x -= floor(cub->ray.wall_x);
+}
 
-    dir_x = -1, dir_y = 0
-    plane_x = 0, plane_y = -0.66
-*/
-/*
-// Assume we have the player's grid position
-int player_x = 2; // Column index
-int player_y = 2; // Row index
+void	get_textures(t_game *cub)
+{
+	cub->img.tex_x = (int)cub->ray.wall_x * cub->img.tex_size;
+	if ((cub->ray.side == 0 && cub->ray.ray_dir_y > 0) \
+		|| (cub->ray.side == 1 && cub->ray.ray_dir_y < 0))
+		cub->img.tex_x = cub->img.tex_size - cub->img.tex_x - 1;
+	if (cub->ray.side == 0) 
+	{
+		if (cub->ray.ray_dir_x > 0)
+			cub->img.tex_i = 0;
+		else
+			cub->img.tex_i = 1;
+	}
+	else
+	{
+		if (cub->ray.ray_dir_y > 0)
+			cub->img.tex_i = 2;
+		else
+			cub->img.tex_i = 3;
+	}
+}
 
-// Set up player's position as float
-double pos_x = player_x + 0.5; // Center of the cell in the x-direction
-double pos_y = player_y + 0.5; // Center of the cell in the y-direction
-*/
+void	render_textures(t_game *cub, int x)
+{
+	int	y;
+	
+	y = 0;
+	while (y < WIN_H)
+	{
+		if (y < cub->ray.draw_s)
+			cub->img_buf[y * cub->win_w + x] = cub->img.c_color;
+		else if (y > cub->ray.draw_e)
+			cub->img_buf[y * cub->win_w + x] = cub->img.f_color;
+		else
+		{
+			if (cub->ray.line_h > 0)
+   				cub->img.tex_y = (int)((y - cub->ray.draw_s) * cub->img.tex_size / cub->ray.line_h);
+			else
+   				cub->img.tex_y = 0;
+			cub->img_buf[y * cub->win_w + x] = cub->img.tex_buf[cub->img.tex_i][cub->img.tex_y * cub->img.tex_size + cub->img.tex_x];
+		}
+		y++;
+	}
+}
+
+void	debug_print(t_game *cub, int x)
+{
+	printf("x: %d, cub->win_h = %.2f, cub->win_w = %.2f\ncub->ray.cam_x = %.2f\ncub->ray.cam_y = %.2f\ncub->ray.ray_dir_x = %.2f\n \
+	cub->ray.ray_dir_y = %.2f\ncub->ray.pos_x = %.2f\ncub->ray.pos_y = %.2f\ncub->ray.map_x = %.2f\ncub->ray.map_y = %.2f\n \
+	cub->ray.delta_dist_x = %.2f\ncub->ray.delta_dist_y = %.2f\ncub->ray.step_x = %.2f\ncub->ray.step_y = %.2f\n \
+	cub->ray.side_dist_x = %.2f\ncub->ray.side_dist_y = %.2f\ncub->ray.wall_dist = %.2f\ncub->ray.wall_x = %.2f\n \
+	cub->ray.line_h = %.2f\ncub->ray.draw_s = %.2f\ncub->ray.draw_e = %.2f\ncub->ray.side = %.2f\n", \
+	x, (double)cub->win_h, (double)cub->win_w, (double)cub->ray.cam_x, (double)cub->ray.cam_y, (double)cub->ray.ray_dir_x, \
+	(double)cub->ray.ray_dir_y, (double)cub->ray.pos_x, (double)cub->ray.pos_y, (double)cub->ray.map_x, (double)cub->ray.map_y, \
+	(double)cub->ray.delta_dist_x, (double)cub->ray.delta_dist_y, (double)cub->ray.step_x, (double)cub->ray.step_y, \
+	(double)cub->ray.side_dist_x, (double)cub->ray.side_dist_y, (double)cub->ray.wall_dist, (double)cub->ray.wall_x, \
+	(double)cub->ray.line_h, (double)cub->ray.draw_s, (double)cub->ray.draw_e, (double)cub->ray.side);
+
+	printf("line_h: %d\n", cub->ray.line_h);
+
+}
 
 void	raycasting(t_game *cub)
 {
-	cub->win_h = WIN_H;
-	cub->win_w = WIN_W;
-	double	camera_x = 0;
-	double	camera_y = 0;
-	double	ray_dir_x = 0;
-	double	ray_dir_y = 0;
-	double	dir_x = 0; // depend on player pos -- here is for NORTH
-	double	dir_y = -1; // depend on player pos -- here is for NORTH
-	double	plane_x = 0.66; // depend on player pos -- here is for NORTH
-	double	plane_y = 0; // depend on player pos -- here is for NORTH
-	int		x;
-	/*DELTA DISTANCE CALCULATION*/
-	double	posx = 5.5; //position_player_x;
-	double	posy = 2.5; //position_player_y;
-	int		map_x = (int)posx; 
-	int		map_y = (int)posy; 
-	double	delta_dir_x = 0;
-	double	delta_dir_y = 0;
-	/*MOVING THE RAY*/
-	int		step_x = 0; // step_x = -1 -->left // step_x = 1 -->right
-	int		step_y = 0; // step_y = -1 -->up // step_y = 1 -->down
-	double	side_dist_x = 0; //store dist from ray pos to next x or y grid line
-	double	side_dist_y = 0;
-	/*CROSS A WALL*/
-	int 	side = 0; // if side = 0 is x wall 1st // if side = 1 y wall 1st
-	/*CALCULATING WALL DISTANCE*/
-	double	wall_dist = 0;
-	double	wall_x = 0;
-	int		line_height = 0;
-	int		draw_start = 0;
-	int		draw_end = 0;
-	/*texture render*/
-	int		tex_index = 0; // select which image to generate (NO, SO, WE or EA)
+	int	x;
 
 	x = 0;
+	ray_init(cub);
 	cub->mlx_img = mlx_new_image(cub->mlx, cub->win_w, cub->win_h);
 	if (cub->mlx_img == NULL)
 		ft_exit("Error generating mlx_img", cub, 1);
-	cub->img_buf = (int *)mlx_get_data_addr(cub->mlx_img, &cub->bpp, &cub->line_lenght, &cub->endian);
+	cub->img_buf = (int *)mlx_get_data_addr(cub->mlx_img, &cub->bpp, &cub->line_len, &cub->endian);
 	if (cub->img_buf == NULL)
 		ft_exit("Error generating img_buf", cub, 1);
-
-	while (x < WIN_W) // creating the fan of ray for NORTH side
+	facing_dir(cub);
+	while (x < WIN_W)
 	{
-		/*RAYCASTING*/
-		camera_y = 0;
-		camera_x = 2 * x / WIN_W - 1;
-		ray_dir_x = dir_x + plane_x * camera_x;
-		ray_dir_y = dir_y + plane_y * camera_y;
-		/*current grid position*/
-		map_x = (int)posx;
-		map_y = (int)posy;
-		/*DELTA DISTANCE*/
-		delta_dir_x = fabs(1 / ray_dir_x); // see the distance between my pos and the next x or y grid
-		delta_dir_y = fabs(1 / ray_dir_y);
-		/*MOVING RAY*/
-		if (ray_dir_x < 0)
-		{
-			step_x = -1;
-			side_dist_x = (posx - map_x) * delta_dir_x;
-		}
-		else
-		{
-			step_x = 1;
-			side_dist_x = (map_x + 1.0 - posx) * delta_dir_x;
-		}
-		if (ray_dir_y < 0)
-		{
-			step_y = -1;
-			side_dist_y = (posy - map_y) * delta_dir_y;
-		}
-		else
-		{
-			step_y = 1;
-			side_dist_y = (map_y + 1.0 - posy) * delta_dir_y;
-		}
-		/*MOVING UNTIL WALL*/
-		while (cub->map[map_x][map_y] != '1')
-		{
-			if (side_dist_x < side_dist_y)
-			{
-				map_x += step_x;
-				side_dist_x += delta_dir_x;
-				side = 0;
-			}
-			else
-			{
-				map_y += step_y;
-				side_dist_y += delta_dir_y;
-				side = 1;
-			}
-		}
-		/*calculate the distance btw player and wall intersection*/
-		if (side == 0)
-			wall_dist = (map_x - posx + (1 - step_x) / 2) / ray_dir_x;
-		else
-			wall_dist = (map_y - posy + (1 - step_y) / 2) / ray_dir_y;
-		/*calculating the wall height for texture*/
-		line_height = (int)WIN_H / wall_dist; // how it's going to appear on player's eyes (smaller or larger)
-		/*draw the wall segment based on the screen size*/
-		draw_start = -line_height / 2 + WIN_H / 2; // on the screen size, where the line start, if < 0 it is bottom
-		if (draw_start < 0)
-			draw_start = 0;
-		draw_end = line_height / 2 + WIN_H / 2; // on the screen size, where the line start, if > screen height it is top of sreen so -1 security.
-		if (draw_end >= WIN_H)
-			draw_end =WIN_H - 1;
-		if (side == 0)
-			wall_x = posy + wall_dist * ray_dir_y;
-		else
-			wall_x = posx + wall_dist * ray_dir_x;
-		wall_x -= floor(wall_x);
-		/*texture render*/
-		cub->img.tex_x = (int)wall_x * cub->img.tex_size;
-		if ((side == 0 && ray_dir_y > 0) || (side == 1 && ray_dir_y < 0))
-			cub->img.tex_x = cub->img.tex_size - cub->img.tex_x - 1;
-		if (side == 0) 
-		{
-			if (ray_dir_x > 0)
-				tex_index = 0;
-			else
-				tex_index = 1;
-		}
-		else
-		{
-			if (ray_dir_y > 0)
-				tex_index = 2;
-			else
-				tex_index = 3;
-		}
-		int y = 0;
-		while (y < WIN_H)
-		{
-			if (y < draw_start)
-				cub->img_buf[y * cub->win_w + x] = cub->img.c_color;
-			else if (y > draw_end)
-				cub->img_buf[y * cub->win_w + x] = cub->img.f_color;
-			else
-			{
-				if (line_height > 0)
-    				cub->img.tex_y = (int)((y - draw_start) * cub->img.tex_size / line_height);
-				else
-    				cub->img.tex_y = 0;
-				cub->img_buf[y * cub->win_w + x] = cub->img.tex_buf[tex_index][cub->img.tex_y * cub->img.tex_size + cub->img.tex_x];
-			}
-			y++;
-		}
+		get_delta_distance(cub, x);
+		// printf("\n--------------------------\n");
+		// printf("Get delta distance\n");
+		// debug_print(cub, x);
+		wall_distance(cub);
+		// printf("\n--------------------------\n");
+		// printf("Wall distance\n");
+		// debug_print(cub, x);
+		cub->ray.line_h = (int)WIN_H / cub->ray.wall_dist;
+		// printf("line_h: %d, ray_dir_y: %.2f\n", cub->ray.line_h, cub->ray.ray_dir_y);
+		draw_wall(cub);
+		// printf("\n--------------------------\n");
+		// printf("draw_wa	printf("Map Reading\npos_x: %.2f\n, pos_y: %.2f\n, face_dir: %c\n--------------------\n", cub->ray.pos_x, cub->ray.pos_y, cub->p_dir);ll\n");
+		// debug_print(cub, x);
+		get_textures(cub);
+		// printf("\n--------------------------\n");
+		// printf("Get textures\n");
+		// debug_print(cub, x);
+		render_textures(cub, x);
+		// printf("\n--------------------------\n");
+		// printf("render textures\n");
+		// debug_print(cub, x);
 		x++;
 	}
+	printf("\n--------------------------\n");
+	printf("Before put img to window\n");
+	debug_print(cub, x);
 	mlx_put_image_to_window(cub->mlx, cub->mlx_win, cub->mlx_img, 0, 0);
 }
+

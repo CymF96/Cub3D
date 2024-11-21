@@ -12,13 +12,13 @@ void	init_img(t_img img)
 	ft_memset(img.endian, -1, sizeof(img.endian));
 	img.c_color = 0;
 	img.f_color = 0;
+	img.tex_i = 0;
 	img.h = WIN_H;
 	img.w = WIN_W;
 }
 
 void	initialization(t_game *cub)
 {
-	cub->error = NULL;
 	cub->no = NULL;
 	cub->so = NULL;
 	cub->we = NULL;
@@ -28,11 +28,12 @@ void	initialization(t_game *cub)
 	cub->img_buf = NULL;
 	ft_memset(cub->f, -1, sizeof(cub->f));
 	ft_memset(cub->c, -1, sizeof(cub->c));
+	cub->p_dir = '0';
 	cub->player_pos = 0;
 	cub->mlx = NULL;
 	cub->mlx_win = NULL;
 	cub->bpp = 0;
 	cub->endian = 0;
-	cub->line_lenght = 0;
+	cub->line_len = 0;
 	init_img(cub->img);
 }
