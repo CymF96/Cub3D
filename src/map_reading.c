@@ -14,6 +14,16 @@
 
 void	check_map_rules(t_game *cub)
 {
+	for (int i = 0; cub->map[i] != NULL; i++)
+		printf("%s", cub->map[i]);
+	printf("\n");
+	for (int i = 0; i < 3; i++)
+		printf("%d, ", cub->f[i]);
+	printf("\n");
+	for (int i = 0; i < 3; i++) 
+		printf("%d, ", cub->c[i]);
+	printf("\n%s\n%s\n%s\n%s\n", cub->no, cub->so, cub->we, cub->ea);
+	printf("player_pos: %d\n", cub->player_pos);
 	if (cub->player_pos != 1)
 		ft_exit("Information about player position is incorrect", cub, 1);
 	if (!closed_by_walls(cub))
@@ -72,9 +82,9 @@ void	find_player_position(t_game *cub)
 			if (cub->map[i][j] == 'N' || cub->map[i][j] == 'S' \
 				|| cub->map[i][j] == 'W' || cub->map[i][j] == 'E')
 			{
-				cub->ray.pos_x = j + 0.5;
-				cub->ray.pos_y = i + 0.5;
-				cub->p_dir = cub->map[i][j];
+				cub->player.x = j + 0.5;
+				cub->player.y = i + 0.5;
+				cub->player.direction = cub->map[i][j];
 			}
 			j++;
 		}

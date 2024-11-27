@@ -1,28 +1,39 @@
 #include "cub3d.h"
 
-void	generate_window(t_game *cub)
+void	init_game(t_game *cub)
 {
-	cub->win_w = 1200;
-	cub->win_h = 800;
-	cub->mlx_win = mlx_new_window(cub->mlx, cub->win_w,
-			cub->win_h, "Cub3D");
-	if (cub->mlx_win == NULL)
-		ft_exit("mlx_window failed", cub, 1);
+	cub->mlx = mlx_init();
+	if (cub->mlx == NULL)
+		ft_exit("mlx_init failed", cub, 1);
+	cub->win = mlx_new_window(cub->mlx, WIDTH, HEIGHT, "Cub3D");
+	if (cub->win == NULL)
+		ft_exit("mlx_win failed", cub, 1);
+}
+
+void	get_facing_direction(t_player *player, char c)
+{
+	if (c == 'N')
+		player->angle = 3 * PI / 2;
+	else if (c == 'S')
+		player->angle = PI / 2;
+	else if (c == 'W')
+		player->angle = PI;
+	else if (c == 'E')
+		player->angle = 0;
+	player->angle_direction = player->angle * (180 / PI);
+	while (player->angle_direction >= 360)
+		player->angle_direction -= 360;
 }
 
 
 void	start_game(t_game *cub)
 {
-	cub->mlx = mlx_init();
-	if (cub->mlx == NULL)
-		ft_exit("mlx_init failed", cub, 1);
-	generate_window(cub);
-	// draw_map(game);
-	load_textures(cub);
-	set_up_color(cub);
-	mlx_hook(cub->mlx_win, 17, 0, cross_close_window, cub);
-	mlx_key_hook(cub->mlx_win, esc_close_window, cub);
-	raycasting(cub);
-	// mlx_key_hook(cub->mlx_win, game_mv, cub);
+	init_game(cub);
+	init_player(&cub->player);
+	get_facing_direction(&cub->player, cub->player.direction);
+	mlx_hook(cub->win, 2, 1L<<0, key_press, cub);
+	mlx_hook(cub->win, 3, 1L<<1, key_release, &cub->player);
+	//mlx_loop_hook(cub->mlx, draw_game, cub);
+	mlx_hook(cub->win, 17, 0, cross_close_window, NULL);
 	mlx_loop(cub->mlx);
 }

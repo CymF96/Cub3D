@@ -1,288 +1,219 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   raycasting.c                                       :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/21 11:26:58 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/21 17:46:24 by cofische         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+# include "cub3d.h"
 
-#include "cub3d.h"
-
-void    ray_init(t_game *cub)
+int	set_up_color(int *rgb)
 {
-    cub->win_h = WIN_H;
-	cub->win_w = WIN_W;
-	cub->ray.cam_x = 0;
-	cub->ray.cam_y = 0;
-	cub->ray.ray_dir_x = 0;
-	cub->ray.ray_dir_y = 0;
-	cub->ray.map_x = (int)cub->ray.pos_x; 
-	cub->ray.map_y = (int)cub->ray.pos_y; 
-	cub->ray.delta_dist_x = 0;
-	cub->ray.delta_dist_y = 0;
-	cub->ray.step_x = 0;
-	cub->ray.step_y = 0;
-	cub->ray.side_dist_x = 0;
-	cub->ray.side_dist_y = 0;
-	cub->ray.wall_dist = 0;
-	cub->ray.wall_x = 0;
-	cub->ray.line_h = 0;
-	cub->ray.draw_s = 0;
-	cub->ray.draw_e = 0;
-	cub->ray.side = 0;
+	int	color;
+	int	r;
+	int g;
+	int b;
+
+	r = rgb[0];
+	g = rgb[1];
+	b = rgb[2];
+	color = (r << 16 | g << 8 | b);
+	return (color);
 }
 
-void	facing_dir2(t_game *cub)
-{
-	if (cub->p_dir == 'W')
-	{
-		cub->ray.dir_x = -1;
-		cub->ray.dir_y = 0;
-		cub->ray.plane_x = 0;
-		cub->ray.plane_y = -0.66;
-	}
-	else if (cub->p_dir == 'E')
-	{
-		cub->ray.dir_x = 1;
-		cub->ray.dir_y = 0;
-		cub->ray.plane_x = 0;
-		cub->ray.plane_y = 0.66;
-	}
-	else
-		ft_exit("Unknown player facing direction", cub, 1);
-}
-
-void	facing_dir(t_game *cub)
-{
-	if (cub->p_dir == 'N')
-	{
-		cub->ray.dir_x = 0;
-		cub->ray.dir_y = -1;
-		cub->ray.plane_x = 0.66;
-		cub->ray.plane_y = 0;
-	}
-	else if (cub->p_dir == 'S')
-	{
-		cub->ray.dir_x = 0;
-		cub->ray.dir_y = 1;
-		cub->ray.plane_x = -0.66;
-		cub->ray.plane_y = 0;
-	}
-	else
-		facing_dir2(cub);
-}
-
-void	zero_value_check(t_game *cub)
-{
-	if (cub->ray.ray_dir_x == 0)
-    	cub->ray.delta_dist_x = FLT_MAX; // or another appropriate value to handle the edge case
-	else 
-    	cub->ray.delta_dist_x = fabs(1 / cub->ray.ray_dir_x);
-	if (cub->ray.ray_dir_y == 0)
-    	cub->ray.delta_dist_y = FLT_MAX; // similarly handle for ray_dir_y
-	else
-    	cub->ray.delta_dist_y = fabs(1 / cub->ray.ray_dir_y);
-}
-
-void	get_delta_distance(t_game *cub, int x)
-{
-	cub->ray.cam_x = 2 * x / (double)WIN_W - 1;
-	cub->ray.ray_dir_x = cub->ray.dir_x + cub->ray.plane_x * cub->ray.cam_x;
-	cub->ray.ray_dir_y = cub->ray.dir_y + cub->ray.plane_y * cub->ray.cam_x;
-	// zero_value_check(cub);
-	if (fabs(cub->ray.ray_dir_x) > EPSILON)
-    	cub->ray.delta_dist_x = fabs(1 / cub->ray.ray_dir_x);
-	else
-    	cub->ray.delta_dist_x = FLT_MAX; // Use FLT_MAX for finite "practically infinite"
-	if (fabs(cub->ray.ray_dir_y) > EPSILON)
-    	cub->ray.delta_dist_y = fabs(1 / cub->ray.ray_dir_y);
-	else
-    	cub->ray.delta_dist_y = FLT_MAX;
-	// printf("x: %d, delta_dist_x: %.2f, delta_dist_y: %.2f, ray_dir_x: %.2f, ray_dir_y: %.2f\n", x, cub->ray.delta_dist_x, cub->ray.delta_dist_y, cub->ray.ray_dir_x, cub->ray.ray_dir_y);
-	if (cub->ray.ray_dir_x == 0)
-	{
-		cub->ray.step_x = 0;
-    	cub->ray.side_dist_x = FLT_MAX;
-	}
-	else if (cub->ray.ray_dir_x < 0)
-	{
-		cub->ray.step_x = -1;
-		cub->ray.side_dist_x = (cub->ray.pos_x - cub->ray.map_x) * cub->ray.delta_dist_x;
-	}
-	else
-	{
-		cub->ray.step_x = 1;
-		cub->ray.side_dist_x = (cub->ray.map_x + 1.0 - cub->ray.pos_x) * cub->ray.delta_dist_x;
-	}
-	if (cub->ray.ray_dir_y == 0)
-	{
-		cub->ray.step_y = 0;
-    	cub->ray.side_dist_y = FLT_MAX;
-	}
-	else if (cub->ray.ray_dir_y < 0)
-	{
-		cub->ray.step_y = -1;
-		cub->ray.side_dist_y = (cub->ray.pos_y - cub->ray.map_y) * cub->ray.delta_dist_y;
-	}
-	else
-	{
-		cub->ray.step_y = 1;
-		cub->ray.side_dist_y = (cub->ray.map_y + 1.0 - cub->ray.pos_y) * cub->ray.delta_dist_y;
-	}
-	// printf("x: %d, pos_x: %.2f, pos_y: %.2f, map_x: %d, map_y: %d,step_x: %.d, step_y: %d, side_dist_x: %.2f, side_dis_y: %.2f\n", x, cub->ray.pos_x, cub->ray.pos_y, cub->ray.map_x, cub->ray.map_y, cub->ray.step_x, cub->ray.step_y, cub->ray.side_dist_y, cub->ray.side_dist_y);
-}
-
-void	wall_distance(t_game *cub)
-{
-	// printf("cub->map[%d][%d]: %c\n", cub->ray.map_y, cub->ray.map_x, cub->map[cub->ray.map_y][cub->ray.map_x]);
-	while (cub->map[cub->ray.map_y][cub->ray.map_x] != '1')
-	{
-		if (cub->ray.side_dist_x < cub->ray.side_dist_y)
-		{
-			cub->ray.map_x += cub->ray.step_x;
-			cub->ray.side_dist_x += cub->ray.delta_dist_x;
-			cub->ray.side = 0;
-		}
-		else
-		{
-			cub->ray.map_y += cub->ray.step_y;
-			cub->ray.side_dist_y += cub->ray.delta_dist_y;
-			cub->ray.side = 1;
-		}
-	}
-	// printf("map_x: %d, step_x: %d, side_dist_x: %.2f, delta_dist_x: %.2f\nmap_y: %d, step_y: %d, side_dist_y: %.2f, delta_dist_y: %.2f\n", cub->ray.map_x, cub->ray.step_x, cub->ray.side_dist_x, cub->ray.delta_dist_x, cub->ray.map_y, cub->ray.step_y, cub->ray.side_dist_y, cub->ray.delta_dist_y);
-	if (cub->ray.ray_dir_x == 0)
-    	cub->ray.wall_dist = FLT_MAX;
-	else if (cub->ray.side == 0)
-    	cub->ray.wall_dist = (cub->ray.map_x - cub->ray.pos_x + (1 - cub->ray.step_x) / 2) / cub->ray.ray_dir_x;
-	else
-    	cub->ray.wall_dist = (cub->ray.map_y - cub->ray.pos_y + (1 - cub->ray.step_y) / 2) / cub->ray.ray_dir_y;
-	// printf("side: %d, wall_dist: %.2f\n", cub->ray.side, cub->ray.wall_dist);
-}
-
-void	draw_wall(t_game *cub)
-{
-	cub->ray.draw_s = -cub->ray.line_h / 2 + WIN_H / 2;
-	if (cub->ray.draw_s < 0)
-		cub->ray.draw_s = 0;
-	cub->ray.draw_e = cub->ray.line_h / 2 + WIN_H / 2;
-	if (cub->ray.draw_e >= WIN_H)
-		cub->ray.draw_e = WIN_H - 1;
-	if (cub->ray.side == 0)
-		cub->ray.wall_x = cub->ray.pos_y + cub->ray.wall_dist * cub->ray.ray_dir_y;
-	else
-		cub->ray.wall_x = cub->ray.pos_x + cub->ray.wall_dist * cub->ray.ray_dir_x;
-	cub->ray.wall_x -= floor(cub->ray.wall_x);
-}
-
-void	get_textures(t_game *cub)
-{
-	cub->img.tex_x = (int)cub->ray.wall_x * cub->img.tex_size;
-	if ((cub->ray.side == 0 && cub->ray.ray_dir_y > 0) \
-		|| (cub->ray.side == 1 && cub->ray.ray_dir_y < 0))
-		cub->img.tex_x = cub->img.tex_size - cub->img.tex_x - 1;
-	if (cub->ray.side == 0) 
-	{
-		if (cub->ray.ray_dir_x > 0)
-			cub->img.tex_i = 0;
-		else
-			cub->img.tex_i = 1;
-	}
-	else
-	{
-		if (cub->ray.ray_dir_y > 0)
-			cub->img.tex_i = 2;
-		else
-			cub->img.tex_i = 3;
-	}
-}
-
-void	render_textures(t_game *cub, int x)
-{
-	int	y;
-	
-	y = 0;
-	while (y < WIN_H)
-	{
-		if (y < cub->ray.draw_s)
-			cub->img_buf[y * cub->win_w + x] = cub->img.c_color;
-		else if (y > cub->ray.draw_e)
-			cub->img_buf[y * cub->win_w + x] = cub->img.f_color;
-		else
-		{
-			if (cub->ray.line_h > 0)
-   				cub->img.tex_y = (int)((y - cub->ray.draw_s) * cub->img.tex_size / cub->ray.line_h);
-			else
-   				cub->img.tex_y = 0;
-			cub->img_buf[y * cub->win_w + x] = cub->img.tex_buf[cub->img.tex_i][cub->img.tex_y * cub->img.tex_size + cub->img.tex_x];
-		}
-		y++;
-	}
-}
-
-void	debug_print(t_game *cub, int x)
-{
-	printf("x: %d, cub->win_h = %.2f, cub->win_w = %.2f\ncub->ray.cam_x = %.2f\ncub->ray.cam_y = %.2f\ncub->ray.ray_dir_x = %.2f\n \
-	cub->ray.ray_dir_y = %.2f\ncub->ray.pos_x = %.2f\ncub->ray.pos_y = %.2f\ncub->ray.map_x = %.2f\ncub->ray.map_y = %.2f\n \
-	cub->ray.delta_dist_x = %.2f\ncub->ray.delta_dist_y = %.2f\ncub->ray.step_x = %.2f\ncub->ray.step_y = %.2f\n \
-	cub->ray.side_dist_x = %.2f\ncub->ray.side_dist_y = %.2f\ncub->ray.wall_dist = %.2f\ncub->ray.wall_x = %.2f\n \
-	cub->ray.line_h = %.2f\ncub->ray.draw_s = %.2f\ncub->ray.draw_e = %.2f\ncub->ray.side = %.2f\n", \
-	x, (double)cub->win_h, (double)cub->win_w, (double)cub->ray.cam_x, (double)cub->ray.cam_y, (double)cub->ray.ray_dir_x, \
-	(double)cub->ray.ray_dir_y, (double)cub->ray.pos_x, (double)cub->ray.pos_y, (double)cub->ray.map_x, (double)cub->ray.map_y, \
-	(double)cub->ray.delta_dist_x, (double)cub->ray.delta_dist_y, (double)cub->ray.step_x, (double)cub->ray.step_y, \
-	(double)cub->ray.side_dist_x, (double)cub->ray.side_dist_y, (double)cub->ray.wall_dist, (double)cub->ray.wall_x, \
-	(double)cub->ray.line_h, (double)cub->ray.draw_s, (double)cub->ray.draw_e, (double)cub->ray.side);
-
-	printf("line_h: %d\n", cub->ray.line_h);
-
-}
-
-void	raycasting(t_game *cub)
+void	draw_floor(t_game *game)
 {
 	int	x;
+	int	y;
 
-	x = 0;
-	ray_init(cub);
-	cub->mlx_img = mlx_new_image(cub->mlx, cub->win_w, cub->win_h);
-	if (cub->mlx_img == NULL)
-		ft_exit("Error generating mlx_img", cub, 1);
-	cub->img_buf = (int *)mlx_get_data_addr(cub->mlx_img, &cub->bpp, &cub->line_len, &cub->endian);
-	if (cub->img_buf == NULL)
-		ft_exit("Error generating img_buf", cub, 1);
-	facing_dir(cub);
-	while (x < WIN_W)
+	y = HEIGHT / 2 - 1;
+	while (++y < HEIGHT)
 	{
-		get_delta_distance(cub, x);
-		// printf("\n--------------------------\n");
-		// printf("Get delta distance\n");
-		// debug_print(cub, x);
-		wall_distance(cub);
-		// printf("\n--------------------------\n");
-		// printf("Wall distance\n");
-		// debug_print(cub, x);
-		cub->ray.line_h = (int)WIN_H / cub->ray.wall_dist;
-		// printf("line_h: %d, ray_dir_y: %.2f\n", cub->ray.line_h, cub->ray.ray_dir_y);
-		draw_wall(cub);
-		// printf("\n--------------------------\n");
-		// printf("draw_wa	printf("Map Reading\npos_x: %.2f\n, pos_y: %.2f\n, face_dir: %c\n--------------------\n", cub->ray.pos_x, cub->ray.pos_y, cub->p_dir);ll\n");
-		// debug_print(cub, x);
-		get_textures(cub);
-		// printf("\n--------------------------\n");
-		// printf("Get textures\n");
-		// debug_print(cub, x);
-		render_textures(cub, x);
-		// printf("\n--------------------------\n");
-		// printf("render textures\n");
-		// debug_print(cub, x);
-		x++;
+		x = -1;
+		while (++x < WIDTH)
+			put_pixel_rgb(x, y, game->f, game);
 	}
-	printf("\n--------------------------\n");
-	printf("Before put img to window\n");
-	debug_print(cub, x);
-	mlx_put_image_to_window(cub->mlx, cub->mlx_win, cub->mlx_img, 0, 0);
 }
 
+void	draw_ceiling(t_game *game)
+{
+	int	y;
+	int	x;
+
+	y = -1;
+	while (++y < HEIGHT / 2)
+	{
+		x = -1;
+		while (++x < WIDTH)
+			put_pixel_rgb(x, y, game->c, game);
+	}
+}
+
+void	put_pixel_rgb(int x, int y, int *rgb, t_game *game)
+{
+	int index;
+	int color;
+
+	color = set_up_color(rgb);
+	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
+		return ;
+	index = y * game->size_line + x * game->bpp / 8;
+	game->data[index] = color & 0xFF;
+	game->data[index + 1] = (color >> 8) & 0xFF;
+	game->data[index + 2] = (color >> 16) & 0xFF;
+}
+
+void	put_pixel(int x, int y, int color, t_game *game)
+{
+	int index;
+
+	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
+		return ;
+	index = y * game->size_line + x * game->bpp / 8;
+	game->data[index] = color & 0xFF;
+	game->data[index + 1] = (color >> 8) & 0xFF;
+	game->data[index + 2] = (color >> 16) & 0xFF;
+}
+
+int	get_pixel_image(t_game *game, t_ray *ray)
+{
+	char	*pixel;
+
+	if (ray->tex_id == 0)
+		game->tex_wall = load_tex(game, game->no);
+	else if (ray->tex_id == 1)
+		game->tex_wall = load_tex(game, game->so);
+	else if (ray->tex_id == 2)
+		game->tex_wall = load_tex(game, game->we);
+	else if (ray->tex_id == 3)
+		game->tex_wall = load_tex(game, game->ea);
+	else
+		return (1);
+	ray->tex_x = ray->tex_x % game->tex_wall->width;
+	ray->tex_y = ray->tex_y % game->tex_wall->height;
+	if (ray->tex_x >= 0 && ray->tex_x < game->tex_wall->width && ray->tex_y >= 0 && ray->tex_y < game->tex_wall->height)
+	{
+		pixel = game->tex_wall->data + (ray->tex_y * game->tex_wall->size_line + ray->tex_x * (game->tex_wall->bpp / 8));
+		return (*(int *)pixel);
+	}
+	return (0);
+}
+
+bool	hit_wall(float px, float py, t_game *game)
+{
+	int x;
+	int y;
+
+	x = px / BLOCK_SIZE;
+	y = py / BLOCK_SIZE;
+	if (x < 0 || y < 0 || x >= WIDTH || y <= HEIGHT)
+		return true;
+	else if (game->map[y][x] == '1')
+		return true;
+	return false;
+}
+
+float	distance(float x, float y)
+{
+    return sqrt(x * x + y * y);
+}
+
+float	fix_distance(float x1, float y1, float x2, float y2, t_game *game)
+{
+	float wall_dist;
+
+    game->ray.delta_x = x2 - x1;
+	game->ray.delta_y = y2 - y1;
+	game->ray.angle = atan2(game->ray.delta_y, game->ray.delta_x) - game->player.angle;
+	wall_dist = distance(game->ray.delta_x, game->ray.delta_y) * cos(game->ray.angle);
+	return (wall_dist);
+}
+
+void	wall_direction(t_game *game, float ray_x, float ray_y, float ray_angle)
+{
+	int	side_x;
+	int	side_y;
+
+	if (cos(ray_angle) > 0)
+		side_x = 1;
+	if (sin(ray_angle) > 0)
+		side_y = 1;
+	if (hit_wall(ray_x - side_x, ray_y, game) || hit_wall(ray_x - side_x, ray_y - side_y, game))
+	{
+		game->ray.tex_x = (int)ray_x % BLOCK_SIZE;
+		game->ray.tex_id = 3;
+		if (side_y == 1)
+			game->ray.tex_id = 0;
+	}
+	else if (hit_wall(ray_x, ray_y - side_y, game) || hit_wall(ray_x, ray_y, game))
+	{
+		game->ray.tex_x = (int)ray_y % BLOCK_SIZE;
+		game->ray.tex_id = 2;
+		if (side_x == 1)
+			game->ray.tex_id = 1;	
+	}
+}
+
+void	render_wall(t_game *game, t_ray *ray, int i)
+{
+	int	color;
+
+	ray->step = BLOCK_SIZE / ray->height_wall;
+	if (ray->height_wall > HEIGHT)
+	{
+		ray->tex_y = (ray->height_wall - HEIGHT) * ray->step / 2;
+		ray->height_wall = HEIGHT;
+	}
+	ray->start_wall = (HEIGHT - ray->height_wall) / 2;
+	ray->end_wall = game->ray.start_wall + game->ray.height_wall;
+	while (game->ray.start_wall < game->ray.end_wall)
+	{
+		color = get_pixel_image(game, &game->ray);
+		put_pixel(i, ray->start_wall, color, game);
+		ray->tex_y += ray->step;
+		ray->start_wall++;
+	}
+}
+
+
+void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
+{
+	game->ray.cos_angle = cos(ray_angle);
+	game->ray.sin_angle = sin(ray_angle);
+	game->ray.ray_x = player->x;
+	game->ray.ray_y = player->y;
+	while (!hit_wall(game->ray.ray_x, game->ray.ray_y, game))
+	{
+		game->ray.ray_x += game->ray.cos_angle;
+		game->ray.ray_y += game->ray.sin_angle;
+	}
+	wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
+	game->ray.wall_dist = fix_distance(player->x, player->y, game->ray.ray_x, game->ray.ray_y, game);
+	game->ray.height_wall = (BLOCK_SIZE / game->ray.wall_dist) * (WIDTH / 2);
+	render_wall(game, &game->ray, i);
+}
+
+void	draw_wall(t_game *game)
+{
+	t_player	*player;
+	t_ray		*ray;
+	int			i;
+	float		start_angle;
+	float		ray_angle;
+
+	player = &game->player;
+	ray = &game->ray;
+	ray->fov = 60 * PI / 180;
+	start_angle = player->angle - ray->fov / 2.0;
+	i = -1;
+	while (++i < WIDTH)
+	{
+		ray_angle = start_angle + ((float)i / WIDTH) * ray->fov;
+		draw_line(player, game, ray_angle, i);
+	}
+}
+
+int	draw_game(t_game *game)
+{
+	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	draw_floor(game);
+	draw_ceiling(game);
+	draw_wall(game);
+	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	mlx_destroy_image(game->mlx, game->img);
+	move_player(&game->player);
+	return (0);
+}
