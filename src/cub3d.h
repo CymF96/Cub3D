@@ -16,83 +16,85 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
-# define EPSILON 1e-6
-# define KEY_ESC 65307
-# define KEY_W 119
-# define KEY_S 115
-# define KEY_A 97
-# define KEY_D 100
-# define WIN_W 800
-# define WIN_H 600
-
-typedef enum e_errcode
-{
-	WALL,
-	CHAR,
-	FORMAT,
-	FD,
-	M_INFO,
-	M_INPUT,
-	I_INFO,
-	I_INPUT,
-}	t_errcode;
+# define WIDTH 1280
+# define HEIGHT 720
+# define BLOCK_SIZE 64
+# define PI 3.14159265359
+# define ESC 65307
+# define W 119
+# define S 115
+# define A 97
+# define D 100
+# define LEFT 65361
+# define RIGHT 65363
 
 typedef struct s_ray
 {
-	double	cam_x;
-	double	cam_y;
-	double	ray_dir_x;
-	double	ray_dir_y;
-	double	dir_x;
-	double	dir_y;
-	double	plane_x;
-	double	plane_y;
-	double	pos_x;
-	double	pos_y;
-	int		map_x; 
-	int		map_y; 
-	double	delta_dist_x;
-	double	delta_dist_y;
-	int		step_x;
-	int		step_y;
-	double	side_dist_x;
-	double	side_dist_y;
-	double	wall_dist;
-	double	wall_x;
-	int		line_h;
-	int		draw_s;
-	int		draw_e;
+	float	ray_x;
+	float	ray_y;
+	float	cos_a;
+	float	sin_a;
+	float	delta_x;
+	float	delta_y;
+	float	angle;
+	float	dist;
+	float	cos_angle;
+	float	sin_angle;
+	float	height_wall;
+	float	fov;
+	float	start_x;
+	float	step;
+	float	wall_dist;
+	int		start_wall;
+	int		end_wall;
 	int		side;
-}	t_ray;
-
-typedef struct s_img
-{
-	void	*tex[5];
-	int		*tex_buf[4];
-	int		tex_i;
-	int		tex_size;
+	int		tex_id;
 	int		tex_x;
 	int		tex_y;
-	int		*line_lenght[4];
-	int		*bpp[4];
-	int		*endian[4];
-	int		c_color;
-	int		f_color;
-	int		h;
-	int		w;
-}	t_img;
+}	t_ray;
+
+typedef struct s_tex
+{
+	void		*img;
+	int			bpp;
+	int			size_line;
+	int			endian;
+	char		*data;
+	int			width;
+	int			height;
+}	t_tex;
+
+typedef	struct s_player
+{
+	float	x;
+	float	y;
+	int		speed;
+	float	angle;
+	float	angle_speed;
+	float	cos_angle;
+	float	sin_angle;
+	float	angle_direction;
+	bool	up;
+	bool	down;
+	bool	right;
+	bool	left;
+	bool	ro_left;
+	bool	ro_right;
+	char	direction;
+}	t_player;
 
 typedef struct s_game
 {
 	void	*mlx;
-	void	*mlx_win;
-	t_img	img;
+	void	*win;
+	t_tex	*tex_wall;
 	t_ray	ray;
-	void	*mlx_img;
-	int		*img_buf;
+	t_player	player;
+	void	*img;
 	int		bpp;
-	int		line_len;
+	int		size_line;
 	int		endian;
+	char	*data;
 	int		player_pos;
 	char	p_dir;
 	char	**map;
@@ -102,8 +104,6 @@ typedef struct s_game
 	char	*ea;
 	int		f[3];
 	int		c[3];
-	int		win_w;
-	int		win_h;
 }	t_game;
 
 void	initialization(t_game *cub);
@@ -124,13 +124,21 @@ void	clean_game(t_game *cub);
 int		texture_info(t_game *cub, char *line, int i);
 void	check_color_format(t_game *cub, int	*array);
 bool	closed_by_walls(t_game *cub);
-int		esc_close_window(int keycode, t_game *cub);
 int		cross_close_window(t_game *cub);
 void	start_game(t_game *cub);
-int		game_mv(int	keycode, t_game *cub);
-void	set_up_color(t_game *cub);
-void	load_textures(t_game *cub);
+void	move_player(t_player *player);
+int		set_up_color(int *rgb);
 void	raycasting(t_game *cub);
-
+void	facing_dir(t_game *cub);
+int	key_press(int keycode, t_game *game);
+int	key_release(int keycode, t_player *player);
+void	move_player(t_player *player);
+void	put_pixel(int x, int y, int color, t_game *game);
+int	draw_game(t_game *game);
+void	clear_image(t_game *game);
+t_tex	*load_tex(t_game *game, char *texture_file);
+void	put_pixel_rgb(int x, int y, int *rgb, t_game *game);
+void	init_texture(t_tex *texture);
+void	init_player(t_player *player);
 
 #endif

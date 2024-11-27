@@ -1,39 +1,72 @@
 #include "cub3d.h"
 
-void	init_img(t_img img)
+void	ray_init(t_ray *ray)
 {
-	*img.tex = NULL;
-	ft_memset(img.tex_buf, -1, sizeof(img.tex_buf));
-	img.tex_size = 0;
-	img.tex_x = 0;
-	img.tex_y = 0;
-	ft_memset(img.line_lenght, -1, sizeof(img.line_lenght));
-	ft_memset(img.bpp, -1, sizeof(img.bpp));
-	ft_memset(img.endian, -1, sizeof(img.endian));
-	img.c_color = 0;
-	img.f_color = 0;
-	img.tex_i = 0;
-	img.h = WIN_H;
-	img.w = WIN_W;
+	ray->ray_x = 0;
+	ray->ray_y = 0;
+	ray->cos_a = 0;
+	ray->sin_a = 0;
+	ray->delta_x = 0;
+	ray->delta_y = 0;
+	ray->angle = 0;
+	ray->dist = 0;
+	ray->cos_angle = 0;
+	ray->sin_angle = 0;
+	ray->height_wall = 0;
+	ray->fov = 60;
+	ray->start_x = 0;
+	ray->step = 0;
+	ray->wall_dist = 0;
+	ray->start_wall = 0;
+	ray->end_wall = 0;
+	ray->side = 0;
+	ray->tex_id = 0;
+	ray->tex_x = 0;
+	ray->tex_y = 0;
 }
 
-void	initialization(t_game *cub)
+void	init_texture(t_tex *texture)
 {
-	cub->no = NULL;
-	cub->so = NULL;
-	cub->we = NULL;
-	cub->ea = NULL;
-	cub->map = NULL;
-	cub->mlx_img = NULL;
-	cub->img_buf = NULL;
-	ft_memset(cub->f, -1, sizeof(cub->f));
-	ft_memset(cub->c, -1, sizeof(cub->c));
-	cub->p_dir = '0';
-	cub->player_pos = 0;
-	cub->mlx = NULL;
-	cub->mlx_win = NULL;
-	cub->bpp = 0;
-	cub->endian = 0;
-	cub->line_len = 0;
-	init_img(cub->img);
+	texture->img = NULL;
+	texture->bpp = 0;
+	texture->size_line = 0;
+	texture->endian = 0;
+	texture->data = NULL;
+	texture->width = 0;
+	texture->height = 0;
+}
+
+void	init_player(t_player *player)
+{
+	player->up = false;
+	player->down = false;
+	player->right = false;
+	player->left = false;
+	player->ro_left = false;
+	player->ro_right = false;
+	player->speed = 3;
+	player->angle_speed = 0.01;
+	player->angle_direction = 0;
+	player->angle = 0;
+}
+
+void	initialization(t_game *game)
+{
+	game->mlx = NULL;
+	game->win = NULL;
+	game->img = NULL;
+	game->data = NULL;
+	game->tex_wall = NULL;
+	game->no = NULL;
+	game->so = NULL;
+	game->we = NULL;
+	game->ea = NULL;
+	game->map = NULL;
+	game->bpp = 0;
+	game->size_line = 0;
+	game->endian = 0;
+	game->player_pos = 0;
+	ft_memset(game->f, -1, sizeof(game->f));
+	ft_memset(game->c, -1, sizeof(game->c));
+	ray_init(&game->ray);
 }
