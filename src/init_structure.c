@@ -56,7 +56,10 @@ void	initialization(t_game *game)
 	game->win = NULL;
 	game->img = NULL;
 	game->data = NULL;
-	game->tex_wall = NULL;
+	game->north = NULL;
+	game->south = NULL;
+	game->west = NULL;
+	game->east = NULL;
 	game->no = NULL;
 	game->so = NULL;
 	game->we = NULL;

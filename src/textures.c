@@ -1,5 +1,19 @@
 #include "cub3d.h"
 
+int	set_up_color(int *rgb)
+{
+	int	color;
+	int	r;
+	int g;
+	int b;
+
+	r = rgb[0];
+	g = rgb[1];
+	b = rgb[2];
+	color = (r << 16 | g << 8 | b);
+	return (color);
+}
+
 t_tex	*load_tex(t_game *game, char *texture_file)
 {
 	t_tex	*t_wall;

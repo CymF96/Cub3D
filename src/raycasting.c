@@ -1,30 +1,20 @@
 # include "cub3d.h"
 
-int	set_up_color(int *rgb)
-{
-	int	color;
-	int	r;
-	int g;
-	int b;
 
-	r = rgb[0];
-	g = rgb[1];
-	b = rgb[2];
-	color = (r << 16 | g << 8 | b);
-	return (color);
-}
 
 void	draw_floor(t_game *game)
 {
 	int	x;
 	int	y;
 
+	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	printf("game->data: %p\n", game->data);
 	y = HEIGHT / 2 - 1;
 	while (++y < HEIGHT)
 	{
 		x = -1;
 		while (++x < WIDTH)
-			put_pixel_rgb(x, y, game->f, game);
+			put_pixel(x, y, game->floor_color, game);
 	}
 }
 
@@ -33,27 +23,15 @@ void	draw_ceiling(t_game *game)
 	int	y;
 	int	x;
 
+	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	printf("game->data: %p\n", game->data);
 	y = -1;
 	while (++y < HEIGHT / 2)
 	{
 		x = -1;
 		while (++x < WIDTH)
-			put_pixel_rgb(x, y, game->c, game);
+			put_pixel(x, y, game->ceiling_color, game);
 	}
-}
-
-void	put_pixel_rgb(int x, int y, int *rgb, t_game *game)
-{
-	int index;
-	int color;
-
-	color = set_up_color(rgb);
-	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
-		return ;
-	index = y * game->size_line + x * game->bpp / 8;
-	game->data[index] = color & 0xFF;
-	game->data[index + 1] = (color >> 8) & 0xFF;
-	game->data[index + 2] = (color >> 16) & 0xFF;
 }
 
 void	put_pixel(int x, int y, int color, t_game *game)
@@ -62,6 +40,7 @@ void	put_pixel(int x, int y, int color, t_game *game)
 
 	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
 		return ;
+	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
 	index = y * game->size_line + x * game->bpp / 8;
 	game->data[index] = color & 0xFF;
 	game->data[index + 1] = (color >> 8) & 0xFF;
@@ -71,22 +50,23 @@ void	put_pixel(int x, int y, int color, t_game *game)
 int	get_pixel_image(t_game *game, t_ray *ray)
 {
 	char	*pixel;
+	t_tex	*temp;
 
 	if (ray->tex_id == 0)
-		game->tex_wall = load_tex(game, game->no);
+		temp = game->north;
 	else if (ray->tex_id == 1)
-		game->tex_wall = load_tex(game, game->so);
+		temp = game->north;
 	else if (ray->tex_id == 2)
-		game->tex_wall = load_tex(game, game->we);
+		temp = game->north;
 	else if (ray->tex_id == 3)
-		game->tex_wall = load_tex(game, game->ea);
+		temp = game->north;
 	else
-		return (1);
-	ray->tex_x = ray->tex_x % game->tex_wall->width;
-	ray->tex_y = ray->tex_y % game->tex_wall->height;
-	if (ray->tex_x >= 0 && ray->tex_x < game->tex_wall->width && ray->tex_y >= 0 && ray->tex_y < game->tex_wall->height)
+		return (0);
+	ray->tex_x = ray->tex_x % temp->width;
+	ray->tex_y = ray->tex_y % temp->height;
+	if (ray->tex_x >= 0 && ray->tex_x < temp->width && ray->tex_y >= 0 && ray->tex_y < temp->height)
 	{
-		pixel = game->tex_wall->data + (ray->tex_y * game->tex_wall->size_line + ray->tex_x * (game->tex_wall->bpp / 8));
+		pixel = temp->data + (ray->tex_y * temp->size_line + ray->tex_x * (temp->bpp / 8));
 		return (*(int *)pixel);
 	}
 	return (0);
@@ -208,7 +188,9 @@ void	draw_wall(t_game *game)
 
 int	draw_game(t_game *game)
 {
+	printf("HERE\n");
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
+	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
 	draw_floor(game);
 	draw_ceiling(game);
 	draw_wall(game);
