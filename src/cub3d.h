@@ -87,7 +87,10 @@ typedef struct s_game
 {
 	void	*mlx;
 	void	*win;
-	t_tex	*tex_wall;
+	t_tex	*north;
+	t_tex	*south;
+	t_tex	*west;
+	t_tex	*east;
 	t_ray	ray;
 	t_player	player;
 	void	*img;
@@ -104,6 +107,8 @@ typedef struct s_game
 	char	*ea;
 	int		f[3];
 	int		c[3];
+	int		ceiling_color;
+	int		floor_color;
 }	t_game;
 
 void	initialization(t_game *cub);

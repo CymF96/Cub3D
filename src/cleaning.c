@@ -27,10 +27,22 @@ void	clear_image(t_game *game)
 
 void	destroy_img(t_game *cub)
 {
-	if (cub->tex_wall->img != NULL)
-		mlx_destroy_image(cub->mlx, cub->tex_wall->img);
-	if (cub->tex_wall != NULL)
-		free(cub->tex_wall);
+	if (cub->north->img != NULL)
+		mlx_destroy_image(cub->mlx, cub->north->img);
+	if (cub->north != NULL)
+		free(cub->north);
+	if (cub->south->img != NULL)
+		mlx_destroy_image(cub->mlx, cub->south->img);
+	if (cub->south != NULL)
+		free(cub->south);
+	if (cub->west->img != NULL)
+		mlx_destroy_image(cub->mlx, cub->west->img);
+	if (cub->west != NULL)
+		free(cub->west);
+	if (cub->east->img != NULL)
+		mlx_destroy_image(cub->mlx, cub->east->img);
+	if (cub->east != NULL)
+		free(cub->east);
 }
 
 void	free_textures(t_game *cub)
