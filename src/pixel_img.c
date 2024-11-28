@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:15:07 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 12:41:36 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:13:26 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@ void	draw_floor(t_game *game)
 	int	y;
 
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-	printf("game->data: %p\n", game->data);
 	y = HEIGHT / 2 - 1;
 	while (++y < HEIGHT)
 	{
@@ -34,7 +33,6 @@ void	draw_ceiling(t_game *game)
 	int	x;
 
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-	printf("game->data: %p\n", game->data);
 	y = -1;
 	while (++y < HEIGHT / 2)
 	{
@@ -44,6 +42,7 @@ void	draw_ceiling(t_game *game)
 	}
 }
 
+//setting the 1st angle ray to start drawing from point A to Z on scope of 60 FOV and drawing the wall line on the total screen
 void	draw_wall(t_game *game)
 {
 	int			x;

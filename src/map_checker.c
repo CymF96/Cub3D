@@ -56,6 +56,7 @@ void	case_with_1(t_game *cub, char *line, int i)
 	}
 }
 
+//check if the line is a wall map and so if there is only 1 // check also correct id char
 void	map_identifiers(t_game *cub, char *line, int i)
 {
 	while (line[i] != '\0')
@@ -91,7 +92,7 @@ void	analyse_line(t_game *cub, char *line)
 		i++;
 	if (texture_info(cub, line, i)) // checking if we got a texture information like nroth path or ceiling rgb color 
 		return ;
-	if (line[i] == '1' && cub->no && cub->so && cub->we && \ 
+	if (line[i] == '1' && cub->no && cub->so && cub->we && \
 			cub->ea && cub->f[0] != -1 && cub->f[1] != -1 && \
 			cub->f[2] != -1 && cub->c[0] != -1 && \
 			cub->c[1] != -1 && cub->c[2] != -1)

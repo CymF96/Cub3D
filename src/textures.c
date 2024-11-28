@@ -1,5 +1,6 @@
 #include "cub3d.h"
 
+//set rgb to a color by combining the bits
 int	set_up_color(int *rgb)
 {
 	int	color;
@@ -14,6 +15,7 @@ int	set_up_color(int *rgb)
 	return (color);
 }
 
+//create a texture structure per facing direction to be easily accessible during rendering
 t_tex	*load_tex(t_game *game, char *texture_file)
 {
 	t_tex	*t_wall;

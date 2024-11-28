@@ -47,8 +47,7 @@ void	init_player(t_player *player, t_game *game)
 	// player->ro_left = false;
 	// player->ro_right = false;
 	player->speed = 3;
-	player->angle_speed = 0.01;
-	player->angle_direction = 0;
+	player->angle_speed = 0.1;
 	player->angle = 0;
 	player->game = game;
 }

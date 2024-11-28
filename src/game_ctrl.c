@@ -6,19 +6,18 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 12:45:33 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:11:20 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	player_rotation(t_player *player)
+//changing the angle of player by angle_speed when arrow pressed
+void	player_rotation(int keycode, t_player *player)
 {
-	player->cos_angle = cos(player->angle);
-	player->sin_angle = sin(player->angle);
-	if (player->ro_left)
+	if (keycode == LEFT)
 		player->angle -= player->angle_speed;
-	if (player->ro_right)
+	if (keycode == RIGHT)
 		player->angle += player->angle_speed;
 	if (player->angle > 2 * PI)
 		player->angle = 0;
@@ -26,8 +25,11 @@ void	player_rotation(t_player *player)
 		player->angle = 2 * PI;
 }
 
+//updating cos and sin angle to calculate the new x and y of player
 void	key_movement(int keycode, t_player *player)
 {
+	player->cos_angle = cos(player->angle);
+	player->sin_angle = sin(player->angle);
 	if (keycode == ESC)
 	{
 		mlx_loop_end(player->game->mlx);
@@ -54,12 +56,14 @@ void	key_movement(int keycode, t_player *player)
 		player->y += player->sin_angle * player->speed;
 	}
 	if (keycode == RIGHT || keycode == LEFT)
-		player_rotation(player);
+		player_rotation(keycode, player);
 }
 
 int	move_player(int keycode, t_game *game)
 {
+	//change the player x and y position and the angle depending on the keycode
 	key_movement(keycode, &game->player);
+	//draw new rendering
 	draw_game(game);
 	return (0);
 }
