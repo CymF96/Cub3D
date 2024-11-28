@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:15:07 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 14:13:26 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/28 19:20:47 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,20 @@ void	draw_wall(t_game *game)
 		ray_angle = start_angle + (game->ray.fov / WIDTH) * x;
 		draw_line(&game->player, game, ray_angle, x);
 	}
+	
+	/*DEBUGGING PRINTING THE PLAYER POSITION AS GREEN SQUARE ON 2D MAP*/
+	// game->ray.ray_x = game->player.x;
+	// game->ray.ray_y = game->player.y;
+	// game->ray.cos_a = cos(game->player.angle);
+	// game->ray.sin_a = sin(game->player.angle);
+
+	// while (!hit_wall(game->ray.ray_x, game->ray.ray_y, game))
+	// {
+	// 	put_pixel(game->ray.ray_x, game->ray.ray_y, 0xFF0000, game);
+	// 	game->ray.ray_x += game->ray.cos_a;
+	// 	game->ray.ray_y += game->ray.sin_a;
+	// }
+	/*DEBUGGING PRINTING THE PLAYER POSITION AS GREEN SQUARE ON 2D MAP*/
 }
 
 void	put_pixel(int x, int y, int color, t_game *game)

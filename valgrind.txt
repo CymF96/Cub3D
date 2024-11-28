@@ -12,61 +12,61 @@
 ./textures/wolfenstein/purple_stone.xpm
 player_pos: 1
 4701
-==19992== 
-==19992== Syscall param writev(vector[0]) points to uninitialised byte(s)
-==19992==    at 0x4BCF864: writev (writev.c:26)
-==19992==    by 0x4CC6ACA: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==19992==    by 0x4CC6C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==19992==    by 0x4CC7D7E: xcb_writev (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==19992==    by 0x48C10B8: _XSend (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x48C6148: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x48C652B: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x113015: mlx_int_wait_first_expose (in /home/coline/42School/Cub3D/cub3D)
-==19992==    by 0x112D55: mlx_new_window (in /home/coline/42School/Cub3D/cub3D)
-==19992==    by 0x111879: init_game (win_init.c:8)
-==19992==    by 0x1119FA: start_game (win_init.c:35)
-==19992==    by 0x10FA9B: main (cub3d.c:14)
-==19992==  Address 0x4d2769c is 28 bytes inside a block of size 16,384 alloc'd
-==19992==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==19992==    by 0x48B042D: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x112B06: mlx_init (in /home/coline/42School/Cub3D/cub3D)
-==19992==    by 0x111828: init_game (win_init.c:5)
-==19992==    by 0x1119FA: start_game (win_init.c:35)
-==19992==    by 0x10FA9B: main (cub3d.c:14)
-==19992==  Uninitialised value was created by a stack allocation
-==19992==    at 0x112F20: mlx_int_anti_resize_win (in /home/coline/42School/Cub3D/cub3D)
-==19992== 
-==19992== 
-==19992== HEAP SUMMARY:
-==19992==     in use at exit: 0 bytes in 0 blocks
-==19992==   total heap usage: 541 allocs, 541 frees, 131,500 bytes allocated
-==19992== 
-==19992== All heap blocks were freed -- no leaks are possible
-==19992== 
-==19992== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
-==19992== 
-==19992== 1 errors in context 1 of 1:
-==19992== Syscall param writev(vector[0]) points to uninitialised byte(s)
-==19992==    at 0x4BCF864: writev (writev.c:26)
-==19992==    by 0x4CC6ACA: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==19992==    by 0x4CC6C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==19992==    by 0x4CC7D7E: xcb_writev (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
-==19992==    by 0x48C10B8: _XSend (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x48C6148: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x48C652B: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x113015: mlx_int_wait_first_expose (in /home/coline/42School/Cub3D/cub3D)
-==19992==    by 0x112D55: mlx_new_window (in /home/coline/42School/Cub3D/cub3D)
-==19992==    by 0x111879: init_game (win_init.c:8)
-==19992==    by 0x1119FA: start_game (win_init.c:35)
-==19992==    by 0x10FA9B: main (cub3d.c:14)
-==19992==  Address 0x4d2769c is 28 bytes inside a block of size 16,384 alloc'd
-==19992==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-==19992==    by 0x48B042D: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
-==19992==    by 0x112B06: mlx_init (in /home/coline/42School/Cub3D/cub3D)
-==19992==    by 0x111828: init_game (win_init.c:5)
-==19992==    by 0x1119FA: start_game (win_init.c:35)
-==19992==    by 0x10FA9B: main (cub3d.c:14)
-==19992==  Uninitialised value was created by a stack allocation
-==19992==    at 0x112F20: mlx_int_anti_resize_win (in /home/coline/42School/Cub3D/cub3D)
-==19992== 
-==19992== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==33623== 
+==33623== Syscall param writev(vector[0]) points to uninitialised byte(s)
+==33623==    at 0x4BCF864: writev (writev.c:26)
+==33623==    by 0x4CC6ACA: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==33623==    by 0x4CC6C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==33623==    by 0x4CC7D7E: xcb_writev (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==33623==    by 0x48C10B8: _XSend (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x48C6148: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x48C652B: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x1132F5: mlx_int_wait_first_expose (in /home/coline/42School/Cub3D/cub3D)
+==33623==    by 0x113035: mlx_new_window (in /home/coline/42School/Cub3D/cub3D)
+==33623==    by 0x1118A5: init_game (win_init.c:8)
+==33623==    by 0x111A26: start_game (win_init.c:35)
+==33623==    by 0x10FA9B: main (cub3d.c:14)
+==33623==  Address 0x4d2769c is 28 bytes inside a block of size 16,384 alloc'd
+==33623==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==33623==    by 0x48B042D: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x112DE6: mlx_init (in /home/coline/42School/Cub3D/cub3D)
+==33623==    by 0x111854: init_game (win_init.c:5)
+==33623==    by 0x111A26: start_game (win_init.c:35)
+==33623==    by 0x10FA9B: main (cub3d.c:14)
+==33623==  Uninitialised value was created by a stack allocation
+==33623==    at 0x113200: mlx_int_anti_resize_win (in /home/coline/42School/Cub3D/cub3D)
+==33623== 
+==33623== 
+==33623== HEAP SUMMARY:
+==33623==     in use at exit: 0 bytes in 0 blocks
+==33623==   total heap usage: 1,307 allocs, 1,307 frees, 181,080 bytes allocated
+==33623== 
+==33623== All heap blocks were freed -- no leaks are possible
+==33623== 
+==33623== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==33623== 
+==33623== 1 errors in context 1 of 1:
+==33623== Syscall param writev(vector[0]) points to uninitialised byte(s)
+==33623==    at 0x4BCF864: writev (writev.c:26)
+==33623==    by 0x4CC6ACA: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==33623==    by 0x4CC6C4E: ??? (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==33623==    by 0x4CC7D7E: xcb_writev (in /usr/lib/x86_64-linux-gnu/libxcb.so.1.1.0)
+==33623==    by 0x48C10B8: _XSend (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x48C6148: _XReadEvents (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x48C652B: XWindowEvent (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x1132F5: mlx_int_wait_first_expose (in /home/coline/42School/Cub3D/cub3D)
+==33623==    by 0x113035: mlx_new_window (in /home/coline/42School/Cub3D/cub3D)
+==33623==    by 0x1118A5: init_game (win_init.c:8)
+==33623==    by 0x111A26: start_game (win_init.c:35)
+==33623==    by 0x10FA9B: main (cub3d.c:14)
+==33623==  Address 0x4d2769c is 28 bytes inside a block of size 16,384 alloc'd
+==33623==    at 0x484D953: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==33623==    by 0x48B042D: XOpenDisplay (in /usr/lib/x86_64-linux-gnu/libX11.so.6.4.0)
+==33623==    by 0x112DE6: mlx_init (in /home/coline/42School/Cub3D/cub3D)
+==33623==    by 0x111854: init_game (win_init.c:5)
+==33623==    by 0x111A26: start_game (win_init.c:35)
+==33623==    by 0x10FA9B: main (cub3d.c:14)
+==33623==  Uninitialised value was created by a stack allocation
+==33623==    at 0x113200: mlx_int_anti_resize_win (in /home/coline/42School/Cub3D/cub3D)
+==33623== 
+==33623== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)

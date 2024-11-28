@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 14:11:20 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:35:00 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	move_player(int keycode, t_game *game)
 {
 	//change the player x and y position and the angle depending on the keycode
 	key_movement(keycode, &game->player);
+	mlx_destroy_image(game->mlx, game->img);
+	game->img = NULL;
 	//draw new rendering
 	draw_game(game);
 	return (0);
