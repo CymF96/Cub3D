@@ -19,27 +19,23 @@ void	init_game(t_game *cub)
 void	get_facing_direction(t_player *player, char c)
 {
 	if (c == 'N')
-		player->angle = 3 * PI / 2;
-	else if (c == 'S')
 		player->angle = PI / 2;
+	else if (c == 'S')
+		player->angle = -PI / 2;
 	else if (c == 'W')
 		player->angle = PI;
 	else if (c == 'E')
 		player->angle = 0;
-	player->angle_direction = player->angle * (180 / PI);
-	while (player->angle_direction >= 360)
-		player->angle_direction -= 360;
 }
 
 
 void	start_game(t_game *cub)
 {
 	init_game(cub);
-	init_player(&cub->player);
+	init_player(&cub->player, cub);
 	get_facing_direction(&cub->player, cub->player.direction);
-	mlx_hook(cub->win, 2, 1L<<0, key_press, cub);
-	mlx_hook(cub->win, 3, 1L<<1, key_release, &cub->player);
-	mlx_loop_hook(cub->mlx, draw_game, cub);
-	mlx_hook(cub->win, 17, 0, cross_close_window, NULL);
+	draw_game(cub);
+	mlx_hook(cub->win, 17, 0, cross_close_window, cub);
+	mlx_hook(cub->win, 2, 1L<<0, move_player, cub);
 	mlx_loop(cub->mlx);
 }

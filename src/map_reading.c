@@ -30,6 +30,7 @@ void	check_map_rules(t_game *cub)
 		ft_exit("map is not closed/surrounded by walls", cub, 1);
 }
 
+//Reading file line by line to parse information in variable
 void	readmap(t_game *cub, int fd)
 {
 	char	*line;
@@ -82,8 +83,8 @@ void	find_player_position(t_game *cub)
 			if (cub->map[i][j] == 'N' || cub->map[i][j] == 'S' \
 				|| cub->map[i][j] == 'W' || cub->map[i][j] == 'E')
 			{
-				cub->player.x = j + 0.5;
-				cub->player.y = i + 0.5;
+				cub->player.x = (j + 0.5) * BLOCK_SIZE;
+				cub->player.y = (i + 0.5) * BLOCK_SIZE;
 				cub->player.direction = cub->map[i][j];
 			}
 			j++;
@@ -96,6 +97,7 @@ bool	map_validation(t_game *cub, char *input)
 {
 	int	fd;
 
+	//check if the map is in correct .cub format
 	if (!map_format(input))
 		ft_exit("Map format isn't correct. \
 			Please use .cub only", cub, 1);
@@ -103,8 +105,11 @@ bool	map_validation(t_game *cub, char *input)
 	if (fd < 0)
 		ft_exit("Map file can't be read. \
 			Please check the map filename", cub, 1);
+	//read the file and add element to correct variable in the structure + setup map char **
 	readmap(cub, fd);
+	//additionnal map checking 
 	check_map_rules(cub);
+	// init the player position for raycasting calculation
 	find_player_position(cub);
 	return (true);
 }

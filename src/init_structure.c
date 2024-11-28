@@ -25,6 +25,7 @@ void	ray_init(t_ray *ray)
 	ray->tex_y = 0;
 }
 
+//init texture structure
 void	init_texture(t_tex *texture)
 {
 	texture->img = NULL;
@@ -36,18 +37,20 @@ void	init_texture(t_tex *texture)
 	texture->height = 0;
 }
 
-void	init_player(t_player *player)
+void	init_player(t_player *player, t_game *game)
 {
-	player->up = false;
-	player->down = false;
-	player->right = false;
-	player->left = false;
-	player->ro_left = false;
-	player->ro_right = false;
+	// player->up = false; //not needed in new calculation process but keep it until program is working fine
+	// player->down = false;
+	// player->right = false;
+	// player->left = false;
+	// player->exit = false;
+	// player->ro_left = false;
+	// player->ro_right = false;
 	player->speed = 3;
 	player->angle_speed = 0.01;
 	player->angle_direction = 0;
 	player->angle = 0;
+	player->game = game;
 }
 
 void	initialization(t_game *game)
@@ -65,6 +68,7 @@ void	initialization(t_game *game)
 	game->we = NULL;
 	game->ea = NULL;
 	game->map = NULL;
+	game->map_height = 0;
 	game->bpp = 0;
 	game->size_line = 0;
 	game->endian = 0;
