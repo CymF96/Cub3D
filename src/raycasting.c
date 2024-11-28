@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 12:53:10 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:27:20 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,23 @@ void	wall_direction(t_game *game, float ray_x, float ray_y, float ray_angle)
 	}
 }
 
-void	render_wall(t_game *game, t_ray *ray, int i)
+void	render_wall(t_game *game, t_ray *ray, int x)
 {
 	int	color;
 
-	ray->step = BLOCK_SIZE / ray->height_wall;
-	if (ray->height_wall > HEIGHT)
+	ray->step = BLOCK_SIZE / ray->height_wall; //calcualtion the incrementation for pixel loop
+	if (ray->height_wall > HEIGHT) // security to fit the wall as the screen H value
 	{
 		ray->tex_y = (ray->height_wall - HEIGHT) * ray->step / 2;
 		ray->height_wall = HEIGHT;
 	}
-	ray->start_wall = (HEIGHT - ray->height_wall) / 2;
-	ray->end_wall = game->ray.start_wall + game->ray.height_wall;
-	while (game->ray.start_wall < game->ray.end_wall)
+	ray->start_wall = (HEIGHT - ray->height_wall) / 2; //start position of wall slice
+	ray->end_wall = game->ray.start_wall + game->ray.height_wall; //end position of wall slice
+	while (game->ray.start_wall < game->ray.end_wall) //add curent pixel wall to mlx_data for final image
 	{
-		color = 255;
+		color = 255; //cheking the ray assignement 
 		// color = get_pixel_image(game, &game->ray);
-		put_pixel(i, ray->start_wall, color, game);
+		put_pixel(x, ray->start_wall, color, game);
 		ray->tex_y += ray->step;
 		ray->start_wall++;
 	}
@@ -82,17 +82,21 @@ void	render_wall(t_game *game, t_ray *ray, int i)
 
 void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 {
+	//set the ray start point as player postion on screen
 	game->ray.ray_x = player->x;
 	game->ray.ray_y = player->y;
 	// printf("BEFORE WALL_DIRECTION: ray_x: %.5f, player_x %.5f, ray_y: %.5f, player_y: %.5f\n", game->ray.ray_x, player->x, game->ray.ray_y, player->y);
 	while (!hit_wall(game->ray.ray_x, game->ray.ray_y, game))
 	{
+		//inscreasing ray movement until getting the wall hit point
 		game->ray.ray_x += cos(ray_angle);
 		game->ray.ray_y += sin(ray_angle);
 		printf("HIT_WALL: ray_x: %.5f, ray_y: %.5f\n", game->ray.ray_x, game->ray.ray_y);
 	}
 	// printf("AFTER WALL_DIRECTION: ray_x: %.5f, player_x %.5f, ray_y: %.5f, player_y: %.5f\n", game->ray.ray_x, player->x, game->ray.ray_y, player->y);
+	//per hit point, checking which wall has been hit to use correct texture
 	wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
+	//calculating the total distance between player and wall to set the size of the wall line with fisheye correction 
 	game->ray.delta_x = game->ray.ray_x - player->x;
 	game->ray.delta_y = game->ray.ray_y - player->y;
 	// printf("delta_x: %.2f, delta_y: %.2f\n", game->ray.delta_x, game->ray.delta_y);
@@ -102,16 +106,21 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	game->ray.wall_dist = sqrt((game->ray.delta_x * game->ray.delta_x) + (game->ray.delta_y * game->ray.delta_y)) * cos(ray_angle);
 	game->ray.height_wall = (BLOCK_SIZE / game->ray.wall_dist) * (WIDTH / 2);
 	// printf("ray->wall_distance : %.2f\n", game->ray.wall_dist);
+	//printing pixel to img with the wall distance and wall texture 
 	render_wall(game, &game->ray, i);
 }
 
 void	draw_game(t_game *game)
 {
+	//creating the final img pointer and data addrs to be use for screen display
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	// as floor and ceiling are always in the screen, they are draw separatly before the wall rendering
 	draw_floor(game);
 	draw_ceiling(game);
+	// draw wall after the background
 	draw_wall(game);
+	//put final image to window
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->img);
 	game->img = NULL;

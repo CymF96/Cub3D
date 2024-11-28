@@ -1,5 +1,6 @@
 #include "cub3d.h"
 
+//copying map by using a temp map that is increase at every line met
 void	copy_map(t_game *cub, char *line)
 {
 	char	**temp_map;

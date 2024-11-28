@@ -69,6 +69,7 @@ bool	map_format(char *input)
 	return (false);
 }
 
+//find player and convert the position coordinate into screen + set direction for later initialization
 void	find_player_position(t_game *cub)
 {
 	int	i;
