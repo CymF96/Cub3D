@@ -3,25 +3,24 @@
 void	copy_map(t_game *cub, char *line)
 {
 	char	**temp_map;
-	int		nbr_lines;
 	int		i;
 
 	i = -1;
-	nbr_lines = 0;
+	cub->map_height = 0;
 	if (!line || line[0] == '\0')
 		ft_exit("line in copy_map() is NULL", cub, 1);
 	if (cub->map != NULL)
-		nbr_lines = ft_lines_count(cub->map);
-	temp_map = malloc(sizeof(char *) * (nbr_lines + 2));
+		cub->map_height = ft_lines_count(cub->map);
+	temp_map = malloc(sizeof(char *) * (cub->map_height + 2));
 	if (temp_map == NULL)
 		ft_exit("malloc of temp_map in copy_map failed", cub, 1);
-	while (++i < nbr_lines)
+	while (++i < cub->map_height)
 		temp_map[i] = cub->map[i];
 	if (cub->map)
 		free(cub->map);
 	cub->map = temp_map;
 	cub->map[i++] = ft_strdup(line);
-	if (cub->map[nbr_lines] == NULL)
+	if (cub->map[cub->map_height] == NULL)
 		ft_exit("strdup of line in copy_map failed", cub, 1);
 	cub->map[i] = NULL;
 }

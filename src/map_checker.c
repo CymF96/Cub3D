@@ -46,7 +46,7 @@ void	case_with_1(t_game *cub, char *line, int i)
 {
 	int	j;
 
-	j = i + 1;
+	j = i + 1; // got to the second char. If not 
 	while (line[j] != '\0' && line[j] == ' ')
 	{
 		j++;
@@ -81,28 +81,29 @@ void	map_identifiers(t_game *cub, char *line, int i)
 	copy_map(cub, line);
 }
 
+//main function to analyse the input from gnl
 void	analyse_line(t_game *cub, char *line)
 {
 	int	i;
 
 	i = 0;
-	while (line[i] != '\0' && line[i] == ' ')
+	while (line[i] != '\0' && line[i] == ' ') //as long as there is space and it is not the end of the line continue
 		i++;
-	if (texture_info(cub, line, i))
+	if (texture_info(cub, line, i)) // checking if we got a texture information like nroth path or ceiling rgb color 
 		return ;
-	if (line[i] == '1' && cub->no && cub->so && cub->we && \
+	if (line[i] == '1' && cub->no && cub->so && cub->we && \ 
 			cub->ea && cub->f[0] != -1 && cub->f[1] != -1 && \
 			cub->f[2] != -1 && cub->c[0] != -1 && \
 			cub->c[1] != -1 && cub->c[2] != -1)
 	{
-		map_identifiers(cub, line, i);
+		map_identifiers(cub, line, i); // if the line start by 1, we are entering the map parsing step so additional check in map id
 		return ;
 	}
 	else if (line[i] == '\n')
 		return ;
 	else if (line[i] == '0')
-		ft_exit("map is not closed/surrounded by walls", cub, 1);
+		ft_exit("map is not closed/surrounded by walls", cub, 1); // as we always check the 1st element of the line (after the texture info) it most be either a space or a 1, if a 0 is meat then the walls are not closed
 	else
-		ft_exit("A format error has been encountered in the map file", cub, 1);
+		ft_exit("A format error has been encountered in the map file", cub, 1); // any other char is an error
 	return ;
 }

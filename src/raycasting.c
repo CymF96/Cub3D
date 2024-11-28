@@ -1,76 +1,16 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
+/*   Updated: 2024/11/28 12:53:10 by cofische         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 # include "cub3d.h"
-
-
-
-void	draw_floor(t_game *game)
-{
-	int	x;
-	int	y;
-
-	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-	printf("game->data: %p\n", game->data);
-	y = HEIGHT / 2 - 1;
-	while (++y < HEIGHT)
-	{
-		x = -1;
-		while (++x < WIDTH)
-			put_pixel(x, y, game->floor_color, game);
-	}
-}
-
-void	draw_ceiling(t_game *game)
-{
-	int	y;
-	int	x;
-
-	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-	printf("game->data: %p\n", game->data);
-	y = -1;
-	while (++y < HEIGHT / 2)
-	{
-		x = -1;
-		while (++x < WIDTH)
-			put_pixel(x, y, game->ceiling_color, game);
-	}
-}
-
-void	put_pixel(int x, int y, int color, t_game *game)
-{
-	int index;
-
-	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
-		return ;
-	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-	index = y * game->size_line + x * game->bpp / 8;
-	game->data[index] = color & 0xFF;
-	game->data[index + 1] = (color >> 8) & 0xFF;
-	game->data[index + 2] = (color >> 16) & 0xFF;
-}
-
-int	get_pixel_image(t_game *game, t_ray *ray)
-{
-	char	*pixel;
-	t_tex	*temp;
-
-	if (ray->tex_id == 0)
-		temp = game->north;
-	else if (ray->tex_id == 1)
-		temp = game->north;
-	else if (ray->tex_id == 2)
-		temp = game->north;
-	else if (ray->tex_id == 3)
-		temp = game->north;
-	else
-		return (0);
-	ray->tex_x = ray->tex_x % temp->width;
-	ray->tex_y = ray->tex_y % temp->height;
-	if (ray->tex_x >= 0 && ray->tex_x < temp->width && ray->tex_y >= 0 && ray->tex_y < temp->height)
-	{
-		pixel = temp->data + (ray->tex_y * temp->size_line + ray->tex_x * (temp->bpp / 8));
-		return (*(int *)pixel);
-	}
-	return (0);
-}
 
 bool	hit_wall(float px, float py, t_game *game)
 {
@@ -79,46 +19,37 @@ bool	hit_wall(float px, float py, t_game *game)
 
 	x = px / BLOCK_SIZE;
 	y = py / BLOCK_SIZE;
-	if (x < 0 || y < 0 || x >= WIDTH || y <= HEIGHT)
-		return true;
-	else if (game->map[y][x] == '1')
+
+	if (x < 0 || y < 0 || x >= (int)ft_strlen(game->map[y]) || y <= game->map_height)
+	 	return true;
+	if (game->map[y][x] == '1')
 		return true;
 	return false;
 }
 
-float	distance(float x, float y)
-{
-    return sqrt(x * x + y * y);
-}
-
-float	fix_distance(float x1, float y1, float x2, float y2, t_game *game)
-{
-	float wall_dist;
-
-    game->ray.delta_x = x2 - x1;
-	game->ray.delta_y = y2 - y1;
-	game->ray.angle = atan2(game->ray.delta_y, game->ray.delta_x) - game->player.angle;
-	wall_dist = distance(game->ray.delta_x, game->ray.delta_y) * cos(game->ray.angle);
-	return (wall_dist);
-}
-
 void	wall_direction(t_game *game, float ray_x, float ray_y, float ray_angle)
 {
-	int	side_x;
-	int	side_y;
+	int		side_x;
+	int		side_y;
+	bool	hit_x;
+	bool	hit_y;
 
+	side_x = 0;
+	side_y = 0;
 	if (cos(ray_angle) > 0)
 		side_x = 1;
 	if (sin(ray_angle) > 0)
 		side_y = 1;
-	if (hit_wall(ray_x - side_x, ray_y, game) || hit_wall(ray_x - side_x, ray_y - side_y, game))
+	hit_x = hit_wall(ray_x - side_x, ray_y, game) || hit_wall(ray_x - side_x, ray_y - side_y, game);
+	hit_y = hit_wall(ray_x, ray_y - side_y, game) || hit_wall(ray_x, ray_y, game);
+	if (hit_x)
 	{
 		game->ray.tex_x = (int)ray_x % BLOCK_SIZE;
 		game->ray.tex_id = 3;
 		if (side_y == 1)
 			game->ray.tex_id = 0;
 	}
-	else if (hit_wall(ray_x, ray_y - side_y, game) || hit_wall(ray_x, ray_y, game))
+	else if (hit_y)
 	{
 		game->ray.tex_x = (int)ray_y % BLOCK_SIZE;
 		game->ray.tex_id = 2;
@@ -141,54 +72,41 @@ void	render_wall(t_game *game, t_ray *ray, int i)
 	ray->end_wall = game->ray.start_wall + game->ray.height_wall;
 	while (game->ray.start_wall < game->ray.end_wall)
 	{
-		color = get_pixel_image(game, &game->ray);
+		color = 255;
+		// color = get_pixel_image(game, &game->ray);
 		put_pixel(i, ray->start_wall, color, game);
 		ray->tex_y += ray->step;
 		ray->start_wall++;
 	}
 }
 
-
 void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 {
-	game->ray.cos_angle = cos(ray_angle);
-	game->ray.sin_angle = sin(ray_angle);
 	game->ray.ray_x = player->x;
 	game->ray.ray_y = player->y;
+	// printf("BEFORE WALL_DIRECTION: ray_x: %.5f, player_x %.5f, ray_y: %.5f, player_y: %.5f\n", game->ray.ray_x, player->x, game->ray.ray_y, player->y);
 	while (!hit_wall(game->ray.ray_x, game->ray.ray_y, game))
 	{
-		game->ray.ray_x += game->ray.cos_angle;
-		game->ray.ray_y += game->ray.sin_angle;
+		game->ray.ray_x += cos(ray_angle);
+		game->ray.ray_y += sin(ray_angle);
+		printf("HIT_WALL: ray_x: %.5f, ray_y: %.5f\n", game->ray.ray_x, game->ray.ray_y);
 	}
+	// printf("AFTER WALL_DIRECTION: ray_x: %.5f, player_x %.5f, ray_y: %.5f, player_y: %.5f\n", game->ray.ray_x, player->x, game->ray.ray_y, player->y);
 	wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
-	game->ray.wall_dist = fix_distance(player->x, player->y, game->ray.ray_x, game->ray.ray_y, game);
+	game->ray.delta_x = game->ray.ray_x - player->x;
+	game->ray.delta_y = game->ray.ray_y - player->y;
+	// printf("delta_x: %.2f, delta_y: %.2f\n", game->ray.delta_x, game->ray.delta_y);
+	// printf("atan: %.2f\n", atan2(game->ray.delta_y, game->ray.delta_x) - game->player.angle);
+	game->ray.angle = atan2(game->ray.delta_y, game->ray.delta_x) - game->player.angle;
+	// printf("sqrt: %.2f\n", sqrt((game->ray.delta_x * game->ray.delta_x) + (game->ray.delta_y * game->ray.delta_y)) * cos(game->ray.angle));
+	game->ray.wall_dist = sqrt((game->ray.delta_x * game->ray.delta_x) + (game->ray.delta_y * game->ray.delta_y)) * cos(ray_angle);
 	game->ray.height_wall = (BLOCK_SIZE / game->ray.wall_dist) * (WIDTH / 2);
+	// printf("ray->wall_distance : %.2f\n", game->ray.wall_dist);
 	render_wall(game, &game->ray, i);
 }
 
-void	draw_wall(t_game *game)
+void	draw_game(t_game *game)
 {
-	t_player	*player;
-	t_ray		*ray;
-	int			i;
-	float		start_angle;
-	float		ray_angle;
-
-	player = &game->player;
-	ray = &game->ray;
-	ray->fov = 60 * PI / 180;
-	start_angle = player->angle - ray->fov / 2.0;
-	i = -1;
-	while (++i < WIDTH)
-	{
-		ray_angle = start_angle + ((float)i / WIDTH) * ray->fov;
-		draw_line(player, game, ray_angle, i);
-	}
-}
-
-int	draw_game(t_game *game)
-{
-	printf("HERE\n");
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
 	draw_floor(game);
@@ -196,6 +114,5 @@ int	draw_game(t_game *game)
 	draw_wall(game);
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->img);
-	move_player(&game->player);
-	return (0);
+	game->img = NULL;
 }

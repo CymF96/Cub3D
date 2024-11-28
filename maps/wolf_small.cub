@@ -3,8 +3,8 @@ SO ./textures/wolfenstein/color_stone.xpm
 WE ./textures/wolfenstein/grey_stone.xpm
 EA ./textures/wolfenstein/purple_stone.xpm
 
-F 0,200,0
-C 0,0,255
+F 66,49,29
+C 118,131,135
 
 1111111111
 1010000001
