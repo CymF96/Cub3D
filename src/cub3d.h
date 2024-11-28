@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 12:48:56 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/28 14:43:58 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,5 +165,6 @@ void	draw_ceiling(t_game *game);
 void	draw_floor(t_game *game);
 void	draw_line(t_player *player, t_game *game, float ray_angle, int i);
 void	ray_init(t_ray *ray);
+bool	hit_wall(float px, float py, t_game *game);
 
 #endif
