@@ -78,7 +78,7 @@ void	wall_distance(t_game *cub)
 		cub->ray.wall_dist = cub->ray.side_dist_y - cub->ray.delta_dist_y;
 }
 
-void	draw_wall(t_game *cub)
+void	draw_wall2(t_game *cub)
 {
 	cub->ray.draw_s = -cub->ray.line_h / 2 + WIN_H / 2;
 	if (cub->ray.draw_s < 0)
