@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 14:15:06 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:35:20 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,31 @@ void	wall_direction(t_game *game, float ray_x, float ray_y, float ray_angle)
 	}
 }
 
+/*
+            // How much to increase the texture coordinate per screen pixel
+      double step = 1.0 * texHeight / lineHeight;
+      // Starting texture coordinate
+      double texPos = (drawStart - h / 2 + lineHeight / 2) * step;
+      for(int y = drawStart; y<drawEnd; y++)
+      {
+        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
+        int texY = (int)texPos & (texHeight - 1);
+        texPos += step;
+        Uint32 color = texture[texNum][texHeight * texY + texX];
+        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
+        if(side == 1) color = (color >> 1) & 8355711;
+        buffer[y][x] = color;
+      }
+*/
+
+
 void	render_wall(t_game *game, t_ray *ray, int x)
 {
-	int	color;
+	int		color;
+	float	pos;
 
 	ray->step = BLOCK_SIZE / ray->height_wall; //calcualtion the incrementation for pixel loop
+	printf("height_wall: %.5f, step: %.5f\n", ray->height_wall, ray->step);
 	if (ray->height_wall > HEIGHT) // security to fit the wall as the screen H value
 	{
 		ray->tex_y = (ray->height_wall - HEIGHT) * ray->step / 2;
@@ -70,11 +90,13 @@ void	render_wall(t_game *game, t_ray *ray, int x)
 	}
 	ray->start_wall = (HEIGHT - ray->height_wall) / 2; //start position of wall slice
 	ray->end_wall = game->ray.start_wall + game->ray.height_wall; //end position of wall slice
+	pos = (ray->start_wall - HEIGHT / 2 + ray->height_wall / 2) * ray->step;
 	while (game->ray.start_wall < game->ray.end_wall) //add curent pixel wall to mlx_data for final image
-	{ //cheking the ray assignement 
+	{ //cheking the ray assignement
+		ray->tex_y = (int)pos & (BLOCK_SIZE - 1);
 		color = get_pixel_image(game, &game->ray);
 		put_pixel(x, ray->start_wall, color, game);
-		ray->tex_y += ray->step;
+		pos += ray->step;
 		ray->start_wall++;
 	}
 }
@@ -95,7 +117,7 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 		game->ray.ray_y += sin(ray_angle);
 	}
 	// //per hit point, checking which wall has been hit to use correct texture
-	// wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
+	 wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
 	
 	// //calculating the total distance between player and wall to set the size of the wall line with fisheye correction 
 	game->ray.delta_x = game->ray.ray_x - player->x;
@@ -104,16 +126,16 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	game->ray.wall_dist = sqrt((game->ray.delta_x * game->ray.delta_x) + (game->ray.delta_y * game->ray.delta_y)) * cos(game->ray.angle);
 	game->ray.height_wall = (BLOCK_SIZE / game->ray.wall_dist) * (WIDTH / 2);
 	//printing pixel to img with the wall render in 3D with correct textures 
-	// render_wall(game, &game->ray, i);
+	 render_wall(game, &game->ray, i);
 	
 /*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
-	int start_y = (HEIGHT - game->ray.height_wall) / 2;
-	int	end = start_y + game->ray.height_wall;
-	while (start_y < end)
-	{
-		put_pixel(i, start_y, 255, game);
-		start_y++;
-	}
+	// int start_y = (HEIGHT - game->ray.height_wall) / 2;
+	// int	end = start_y + game->ray.height_wall;
+	// while (start_y < end)
+	// {
+	// 	put_pixel(i, start_y, 255, game);
+	// 	start_y++;
+	// }
 /*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
 }
 
