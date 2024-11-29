@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 19:19:35 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 10:14:19 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ bool	hit_wall(float px, float py, t_game *game)
 	x = px / BLOCK_SIZE;
 	y = py / BLOCK_SIZE;
 
+	if (x < 0 || y < 0 || x >= (int)ft_strlen(game->map[y]) || y >= game->map_height)
+		return true;
 	if (game->map[y][x] == '1')
 		return true;
 	return false;
@@ -116,31 +118,31 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 }
 
 /*DEBUGGING SHOWING THE MAP ON 2D GRID*/
-void	draw_square(int x, int y, int size, int color, t_game *game)
-{
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + size, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y + size, color, game);
-}
+// void	draw_square(int x, int y, int size, int color, t_game *game)
+// {
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + i, y, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x, y + i, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + size, y + i, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + i, y + size, color, game);
+// }
 
-void	draw_map(t_game *game)
-{
-	char **map = game->map;
-	int color = 0x0000FF;
-	for (int y = 0; map[y]; y++)
-	{
-		for (int x = 0; map[y][x]; x++)
-		{
-			if (map[y][x] == '1')
-				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
-		}
-	}
-}
+// void	draw_map(t_game *game)
+// {
+// 	char **map = game->map;
+// 	int color = 0x0000FF;
+// 	for (int y = 0; map[y]; y++)
+// 	{
+// 		for (int x = 0; map[y][x]; x++)
+// 		{
+// 			if (map[y][x] == '1')
+// 				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
+// 		}
+// 	}
+// }
 /*DEBUGGING SHOWING THE MAP ON 2D GRID*/
 
 

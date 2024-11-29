@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_ctrl.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 14:35:00 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 11:59:27 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 //changing the angle of player by angle_speed when arrow pressed
 void	player_rotation(int keycode, t_player *player)
 {
+	printf("player angle: %.5f\n", player->angle);
 	if (keycode == LEFT)
 		player->angle -= player->angle_speed;
+	printf("new player angle: %.5f\n", player->angle);
 	if (keycode == RIGHT)
 		player->angle += player->angle_speed;
 	if (player->angle > 2 * PI)
@@ -26,7 +28,7 @@ void	player_rotation(int keycode, t_player *player)
 }
 
 //updating cos and sin angle to calculate the new x and y of player
-void	key_movement(int keycode, t_player *player)
+void	key_movement(int keycode, t_player *player) // add checker for the wall coalistion 
 {
 	player->cos_angle = cos(player->angle);
 	player->sin_angle = sin(player->angle);
@@ -37,6 +39,7 @@ void	key_movement(int keycode, t_player *player)
 	}
 	if (keycode == W)
 	{
+		//testing wall coalition checker
 		player->x += player->cos_angle * player->speed;
 		player->y += player->sin_angle * player->speed;
 	}

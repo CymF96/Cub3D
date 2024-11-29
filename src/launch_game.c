@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   launch_game.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/29 10:15:55 by cofische          #+#    #+#             */
+/*   Updated: 2024/11/29 13:09:08 by cofische         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 void	init_game(t_game *cub)
@@ -20,9 +32,9 @@ void	init_game(t_game *cub)
 void	get_facing_direction(t_player *player, char c)
 {
 	if (c == 'N')
-		player->angle = PI / 2;
+		player->angle = (3 * PI) / 2; // problem with this angle as if the RIGHT/LEFT is pressed, it do directly a 90degre rotation dir right
 	else if (c == 'S')
-		player->angle = -PI / 2;
+		player->angle = PI / 2;
 	else if (c == 'W')
 		player->angle = PI;
 	else if (c == 'E')

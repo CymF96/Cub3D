@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 14:43:58 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 10:24:44 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
-# define WIDTH 1280
-# define HEIGHT 720
-# define BLOCK_SIZE 64
+# define WIDTH 1200
+# define HEIGHT 800
+# define BLOCK_SIZE 128
 # define STEP_SIZE 0.25
 # define PI 3.14159265359
 # define ESC 65307
