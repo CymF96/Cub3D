@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 10:14:19 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 13:40:57 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 		game->ray.ray_y += sin(ray_angle);
 	}
 	// //per hit point, checking which wall has been hit to use correct texture
-	// wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
+	wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
 	
 	// //calculating the total distance between player and wall to set the size of the wall line with fisheye correction 
 	game->ray.delta_x = game->ray.ray_x - player->x;
@@ -104,16 +104,16 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	game->ray.wall_dist = sqrt((game->ray.delta_x * game->ray.delta_x) + (game->ray.delta_y * game->ray.delta_y)) * cos(game->ray.angle);
 	game->ray.height_wall = (BLOCK_SIZE / game->ray.wall_dist) * (WIDTH / 2);
 	//printing pixel to img with the wall render in 3D with correct textures 
-	// render_wall(game, &game->ray, i);
+	render_wall(game, &game->ray, i);
 	
 /*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
-	int start_y = (HEIGHT - game->ray.height_wall) / 2;
-	int	end = start_y + game->ray.height_wall;
-	while (start_y < end)
-	{
-		put_pixel(i, start_y, 255, game);
-		start_y++;
-	}
+	// int start_y = (HEIGHT - game->ray.height_wall) / 2;
+	// int	end = start_y + game->ray.height_wall;
+	// while (start_y < end)
+	// {
+	// 	put_pixel(i, start_y, 255, game);
+	// 	start_y++;
+	// }
 /*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
 }
 
