@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pixel_img.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:15:07 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/28 19:20:47 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:27:19 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ void	draw_wall(t_game *game)
 	float		ray_angle;
 
 	ray_angle = 0;
-	game->ray.fov = PI / 3;
 	start_angle = game->player.angle - (game->ray.fov / 2);
 	x = -1;
 	while (++x < WIDTH)

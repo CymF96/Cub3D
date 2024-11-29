@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:23 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 13:37:13 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 10:16:24 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,6 @@
 
 void	check_map_rules(t_game *cub)
 {
-	for (int i = 0; cub->map[i] != NULL; i++)
-		printf("%s", cub->map[i]);
-	printf("\n");
-	for (int i = 0; i < 3; i++)
-		printf("%d, ", cub->f[i]);
-	printf("\n");
-	for (int i = 0; i < 3; i++) 
-		printf("%d, ", cub->c[i]);
-	printf("\n%s\n%s\n%s\n%s\n", cub->no, cub->so, cub->we, cub->ea);
 	if (cub->player_pos != 1)
 		ft_exit("Information about player position is incorrect", cub, 1);
 	if (!closed_by_walls(cub))
