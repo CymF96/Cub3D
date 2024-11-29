@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 15:35:20 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 15:51:03 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,31 +58,12 @@ void	wall_direction(t_game *game, float ray_x, float ray_y, float ray_angle)
 	}
 }
 
-/*
-            // How much to increase the texture coordinate per screen pixel
-      double step = 1.0 * texHeight / lineHeight;
-      // Starting texture coordinate
-      double texPos = (drawStart - h / 2 + lineHeight / 2) * step;
-      for(int y = drawStart; y<drawEnd; y++)
-      {
-        // Cast the texture coordinate to integer, and mask with (texHeight - 1) in case of overflow
-        int texY = (int)texPos & (texHeight - 1);
-        texPos += step;
-        Uint32 color = texture[texNum][texHeight * texY + texX];
-        //make color darker for y-sides: R, G and B byte each divided through two with a "shift" and an "and"
-        if(side == 1) color = (color >> 1) & 8355711;
-        buffer[y][x] = color;
-      }
-*/
-
-
 void	render_wall(t_game *game, t_ray *ray, int x)
 {
 	int		color;
 	float	pos;
 
 	ray->step = BLOCK_SIZE / ray->height_wall; //calcualtion the incrementation for pixel loop
-	printf("height_wall: %.5f, step: %.5f\n", ray->height_wall, ray->step);
 	if (ray->height_wall > HEIGHT) // security to fit the wall as the screen H value
 	{
 		ray->tex_y = (ray->height_wall - HEIGHT) * ray->step / 2;
@@ -90,10 +71,10 @@ void	render_wall(t_game *game, t_ray *ray, int x)
 	}
 	ray->start_wall = (HEIGHT - ray->height_wall) / 2; //start position of wall slice
 	ray->end_wall = game->ray.start_wall + game->ray.height_wall; //end position of wall slice
-	pos = (ray->start_wall - HEIGHT / 2 + ray->height_wall / 2) * ray->step;
+	pos = (ray->start_wall - HEIGHT / 2 + ray->height_wall / 2) * ray->step; //getting the step converted into pixel side for correct dimension in pixel loop
 	while (game->ray.start_wall < game->ray.end_wall) //add curent pixel wall to mlx_data for final image
 	{ //cheking the ray assignement
-		ray->tex_y = (int)pos & (BLOCK_SIZE - 1);
+		ray->tex_y = (int)pos & (BLOCK_SIZE - 1); // using binary AND op to ensure pixel not get out of TILE_HEIGHT
 		color = get_pixel_image(game, &game->ray);
 		put_pixel(x, ray->start_wall, color, game);
 		pos += ray->step;
