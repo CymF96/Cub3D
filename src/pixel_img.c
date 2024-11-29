@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:15:07 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 15:46:40 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:18:54 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,18 +91,20 @@ int	get_pixel_image(t_game *game, t_ray *ray)
 	char	*pixel;
 	t_tex	*temp;
 
-	if (ray->tex_id == 0) // this texture is printed in reverse
+	if (ray->tex_id == 0)
+		temp = game->north;
+	else if (ray->tex_id == 1) // this texture is printed in reverse -- can only be seen in small.cub map --
 		temp = game->south;
-	else if (ray->tex_id == 1)
-		temp = game->east;
-	else if (ray->tex_id == 2) // problem with this texture as it doesn't print it correctly
+	else if (ray->tex_id == 2) // PROBLEM -- THis west texture is never appearing as west is getting id: 1
 		temp = game->west;
 	else if (ray->tex_id == 3)
-		temp = game->north;
+		temp = game->east;
 	else
 		return (0);
+	// printf("tex_id: %d\n", ray->tex_id);
 	ray->tex_x = ray->tex_x % temp->width;
 	ray->tex_y = ray->tex_y % temp->height;
+	// printf("Af tex_x: %d\n", ray->tex_x);
 	if (ray->tex_x >= 0 && ray->tex_x < temp->width && ray->tex_y >= 0 && ray->tex_y < temp->height)
 	{
 		pixel = temp->data + (ray->tex_y * temp->size_line + ray->tex_x * (temp->bpp / 8));

@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 15:51:03 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 17:24:53 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,31 @@ void	wall_direction(t_game *game, float ray_x, float ray_y, float ray_angle)
 {
 	int		side_x;
 	int		side_y;
-	bool	hit_x;
-	bool	hit_y;
 
 	side_x = 0;
 	side_y = 0;
+	// printf("%.5f\n", cos(ray_angle));
 	if (cos(ray_angle) > 0)
 		side_x = 1;
 	if (sin(ray_angle) > 0)
 		side_y = 1;
-	hit_x = hit_wall(ray_x - side_x, ray_y, game) || hit_wall(ray_x - side_x, ray_y - side_y, game);
-	hit_y = hit_wall(ray_x, ray_y - side_y, game) || hit_wall(ray_x, ray_y, game);
-	if (hit_x)
+	/******PROBLEM ON THIS PART OF CODE*********/
+	
+	if (hit_wall(ray_x - side_x, ray_y, game) || hit_wall(ray_x - side_x, ray_y - side_y, game))
 	{
 		game->ray.tex_x = (int)ray_x % BLOCK_SIZE;
-		game->ray.tex_id = 3;
+		// printf("for NO//SO -- ray.tex_x: %d, ray.x: %.5f\n", game->ray.tex_x, ray_x);
+		game->ray.tex_id = 0;
 		if (side_y == 1)
-			game->ray.tex_id = 0;
+			game->ray.tex_id = 1; //PROBLEM -- texture prints in reverse on screen
 	}
-	else if (hit_y)
+	else if (hit_wall(ray_x, ray_y - side_y, game) || hit_wall(ray_x, ray_y, game))
 	{
 		game->ray.tex_x = (int)ray_y % BLOCK_SIZE;
-		game->ray.tex_id = 2;
+		// printf("for WE/EA -- ray.tex_x: %d\n", game->ray.tex_x );
+		game->ray.tex_id = 2; //PROBLEM -- WEST text is getting the 1st hit_wall condition 
 		if (side_x == 1)
-			game->ray.tex_id = 1;	
+			game->ray.tex_id = 3;	
 	}
 }
 
