@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 10:24:44 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 13:49:18 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 
 # define WIDTH 1200
 # define HEIGHT 800
-# define BLOCK_SIZE 128
+# define BLOCK_SIZE 64
 # define STEP_SIZE 0.25
 # define PI 3.14159265359
 # define ESC 65307
@@ -151,9 +151,9 @@ int		cross_close_window(t_game *cub);
 void	start_game(t_game *cub);
 int		set_up_color(int *rgb);
 void	raycasting(t_game *cub);
-int	move_player(int keycode, t_game *game);
+void	move_player(t_player *player);
 void	put_pixel(int x, int y, int color, t_game *game);
-void	draw_game(t_game *game);
+int	draw_game(t_game *game);
 void	clear_image(t_game *game);
 t_tex	*load_tex(t_game *game, char *texture_file);
 void	init_texture(t_tex *texture);
@@ -166,5 +166,7 @@ void	draw_floor(t_game *game);
 void	draw_line(t_player *player, t_game *game, float ray_angle, int i);
 void	ray_init(t_ray *ray);
 bool	hit_wall(float px, float py, t_game *game);
+int	key_press(int keycode, t_player *player);
+int	key_release(int keycode, t_player *player);
 
 #endif

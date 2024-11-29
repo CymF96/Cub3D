@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 10:16:27 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:27:13 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	ray_init(t_ray *ray)
 	ray->cos_angle = 0;
 	ray->sin_angle = 0;
 	ray->height_wall = 0;
-	ray->fov = 60;
+	ray->fov = PI / 3;
 	ray->start_x = 0;
 	ray->step = 0;
 	ray->wall_dist = 0;
@@ -51,13 +51,13 @@ void	init_texture(t_tex *texture)
 
 void	init_player(t_player *player, t_game *game)
 {
-	// player->up = false; //not needed in new calculation process but keep it until program is working fine
-	// player->down = false;
-	// player->right = false;
-	// player->left = false;
-	// player->exit = false;
-	// player->ro_left = false;
-	// player->ro_right = false;
+	player->up = false;
+	player->down = false;
+	player->right = false;
+	player->left = false;
+	player->exit = false;
+	player->ro_left = false;
+	player->ro_right = false;
 	player->speed = 3;
 	player->angle_speed = 0.1;
 	player->angle = 0;

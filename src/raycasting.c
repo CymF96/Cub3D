@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 13:40:57 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:15:06 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,13 +89,13 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	{
 		//inscreasing ray movement until getting the wall hit point
 		/*DEBUGGING SHOWING THE FOV CAST IN RED*/	
-		//put_pixel(game->ray.ray_x, game->ray.ray_y, 0xFF0000, game);
+		// put_pixel(game->ray.ray_x, game->ray.ray_y, 0xFF0000, game);
 		/*DEBUGGING SHOWING THE FOV CAST IN RED*/
 		game->ray.ray_x += cos(ray_angle);
 		game->ray.ray_y += sin(ray_angle);
 	}
 	// //per hit point, checking which wall has been hit to use correct texture
-	wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
+	// wall_direction(game, game->ray.ray_x, game->ray.ray_y, ray_angle);
 	
 	// //calculating the total distance between player and wall to set the size of the wall line with fisheye correction 
 	game->ray.delta_x = game->ray.ray_x - player->x;
@@ -104,53 +104,57 @@ void	draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	game->ray.wall_dist = sqrt((game->ray.delta_x * game->ray.delta_x) + (game->ray.delta_y * game->ray.delta_y)) * cos(game->ray.angle);
 	game->ray.height_wall = (BLOCK_SIZE / game->ray.wall_dist) * (WIDTH / 2);
 	//printing pixel to img with the wall render in 3D with correct textures 
-	render_wall(game, &game->ray, i);
+	// render_wall(game, &game->ray, i);
 	
 /*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
-	// int start_y = (HEIGHT - game->ray.height_wall) / 2;
-	// int	end = start_y + game->ray.height_wall;
-	// while (start_y < end)
-	// {
-	// 	put_pixel(i, start_y, 255, game);
-	// 	start_y++;
-	// }
+	int start_y = (HEIGHT - game->ray.height_wall) / 2;
+	int	end = start_y + game->ray.height_wall;
+	while (start_y < end)
+	{
+		put_pixel(i, start_y, 255, game);
+		start_y++;
+	}
 /*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
 }
 
 /*DEBUGGING SHOWING THE MAP ON 2D GRID*/
-// void	draw_square(int x, int y, int size, int color, t_game *game)
-// {
-// 	for (int i = 0; i < size; i++)
-// 		put_pixel(x + i, y, color, game);
-// 	for (int i = 0; i < size; i++)
-// 		put_pixel(x, y + i, color, game);
-// 	for (int i = 0; i < size; i++)
-// 		put_pixel(x + size, y + i, color, game);
-// 	for (int i = 0; i < size; i++)
-// 		put_pixel(x + i, y + size, color, game);
-// }
+void	draw_square(int x, int y, int size, int color, t_game *game)
+{
+	for (int i = 0; i < size; i++)
+		put_pixel(x + i, y, color, game);
+	for (int i = 0; i < size; i++)
+		put_pixel(x, y + i, color, game);
+	for (int i = 0; i < size; i++)
+		put_pixel(x + size, y + i, color, game);
+	for (int i = 0; i < size; i++)
+		put_pixel(x + i, y + size, color, game);
+}
 
-// void	draw_map(t_game *game)
-// {
-// 	char **map = game->map;
-// 	int color = 0x0000FF;
-// 	for (int y = 0; map[y]; y++)
-// 	{
-// 		for (int x = 0; map[y][x]; x++)
-// 		{
-// 			if (map[y][x] == '1')
-// 				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
-// 		}
-// 	}
-// }
+void	draw_map(t_game *game)
+{
+	char **map = game->map;
+	int color = 0x0000FF;
+	for (int y = 0; map[y]; y++)
+	{
+		for (int x = 0; map[y][x]; x++)
+		{
+			if (map[y][x] == '1')
+				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
+		}
+	}
+}
 /*DEBUGGING SHOWING THE MAP ON 2D GRID*/
 
 
-void	draw_game(t_game *game)
+int	draw_game(t_game *game)
 {
 	//creating the final img pointer and data addrs to be use for screen display
+	move_player(&game->player);
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
+	
+	
+	
 	// as floor and ceiling are always in the screen, they are draw separatly before the wall rendering
 	draw_floor(game);
 	draw_ceiling(game);
@@ -164,4 +168,9 @@ void	draw_game(t_game *game)
 	draw_wall(game);
 	//put final image to window
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
+	mlx_destroy_image(game->mlx, game->img);
+	game->img = NULL;
+	// mlx_destroy_image(game->mlx, game->img);
+	// game->img = NULL;
+	return (0);
 }

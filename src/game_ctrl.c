@@ -6,20 +6,57 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 11:59:27 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 13:33:00 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//changing the angle of player by angle_speed when arrow pressed
-void	player_rotation(int keycode, t_player *player)
+int	key_press(int keycode, t_player *player)
 {
-	printf("player angle: %.5f\n", player->angle);
-	if (keycode == LEFT)
-		player->angle -= player->angle_speed;
-	printf("new player angle: %.5f\n", player->angle);
+	if (keycode == ESC)
+		player->exit = true;
+	if (keycode == W)
+		player->up = true;
+	if (keycode == S)
+		player->down = true;
+	if (keycode == A)
+		player->left = true;
+	if (keycode == D)
+		player->right = true;
 	if (keycode == RIGHT)
+		player->ro_right = true;
+	if (keycode == LEFT)
+		player->ro_left = true;
+	return (0);
+}
+
+int	key_release(int keycode, t_player *player)
+{
+	if (keycode == ESC)
+		player->exit = false;
+	if (keycode == W)
+		player->up = false;
+	if (keycode == S)
+		player->down = false;
+	if (keycode == A)
+		player->left = false;
+	if (keycode == D)
+		player->right = false;
+	if (keycode == RIGHT)
+		player->ro_right = false;
+	if (keycode == LEFT)
+		player->ro_left = false;
+	return (0);
+}
+
+
+//changing the angle of player by angle_speed when arrow pressed
+void	rotation(t_player *player)
+{
+	if (player->ro_left)
+		player->angle -= player->angle_speed;
+	if (player->ro_right)
 		player->angle += player->angle_speed;
 	if (player->angle > 2 * PI)
 		player->angle = 0;
@@ -28,49 +65,45 @@ void	player_rotation(int keycode, t_player *player)
 }
 
 //updating cos and sin angle to calculate the new x and y of player
-void	key_movement(int keycode, t_player *player) // add checker for the wall coalistion 
+void	key_movement(t_player *player) // add checker for the wall coalistion 
 {
-	player->cos_angle = cos(player->angle);
-	player->sin_angle = sin(player->angle);
-	if (keycode == ESC)
-	{
-		mlx_loop_end(player->game->mlx);
-		ft_exit(NULL, player->game, 0);
-	}
-	if (keycode == W)
+	if (player->up)
 	{
 		//testing wall coalition checker
 		player->x += player->cos_angle * player->speed;
 		player->y += player->sin_angle * player->speed;
 	}
-	if (keycode == S)
+	if (player->down)
 	{
 		player->x -= player->cos_angle * player->speed;
 		player->y -= player->sin_angle * player->speed;
 	}
-	if (keycode == A)
+	if (player->left)
 	{
 		player->x += player->cos_angle * player->speed;
 		player->y -= player->sin_angle * player->speed;
 	}
-	if (keycode == D)
+	if (player->right)
 	{
 		player->x -= player->cos_angle * player->speed;
 		player->y += player->sin_angle * player->speed;
 	}
-	if (keycode == RIGHT || keycode == LEFT)
-		player_rotation(keycode, player);
 }
 
-int	move_player(int keycode, t_game *game)
+void	move_player(t_player *player)
 {
 	//change the player x and y position and the angle depending on the keycode
-	key_movement(keycode, &game->player);
-	mlx_destroy_image(game->mlx, game->img);
-	game->img = NULL;
-	//draw new rendering
-	draw_game(game);
-	return (0);
+	if (player->exit)
+	{
+		mlx_loop_end(player->game->mlx);
+		ft_exit(NULL, player->game, 0);
+	}
+	player->cos_angle = cos(player->angle);
+	player->sin_angle = sin(player->angle);
+	if (player->up || player->down || player->right || player->left)
+		key_movement(player);
+	else if (player->ro_left || player->ro_right)
+		rotation(player);
 }
 
 int	cross_close_window(t_game *cub)

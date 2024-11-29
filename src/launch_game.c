@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:55 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 13:09:08 by cofische         ###   ########.fr       */
+/*   Updated: 2024/11/29 14:12:40 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,11 @@ void	start_game(t_game *cub)
 	init_player(&cub->player, cub);
 	get_facing_direction(&cub->player, cub->player.direction);
 	//draw the initiale window before player move
-	draw_game(cub);
+	// draw_game(cub);
 	mlx_hook(cub->win, 17, 0, cross_close_window, cub);
 	//start loop with player movement
-	mlx_hook(cub->win, 2, 1L<<0, move_player, cub);
+	mlx_hook(cub->win, 2, 1L<<0, key_press, &cub->player);
+	mlx_hook(cub->win, 3, 1L<<1, key_release, &cub->player);
+	mlx_loop_hook(cub->mlx, draw_game, cub);
 	mlx_loop(cub->mlx);
 }
