@@ -1,7 +1,7 @@
 NO ./textures/wolfenstein/blue_stone.xpm
-SO ./textures/wolfenstein/color_stone.xpm
-WE ./textures/wolfenstein/grey_stone.xpm
-EA ./textures/wolfenstein/purple_stone.xpm
+SO ./textures/wolfenstein/blue_stone.xpm
+WE ./textures/wolfenstein/blue_stone.xpm
+EA ./textures/wolfenstein/blue_stone.xpm
 
 F 66,49,29
 C 118,131,135
