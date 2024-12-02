@@ -64,28 +64,42 @@ void rotation(t_player *player)
 }
 
 // updating cos and sin angle to calculate the new x and y of player
-void key_movement(t_player *player) // add checker for the wall coalistion
+void key_movement(t_player *player)
 {
+	float new_x;
+	float new_y;
+	float collision_offset;
+
+	new_x = player->x;
+	new_y = player->y;
+	collision_offset = 5.0;
 	if (player->up)
 	{
-		// testing wall coalition checker
-		player->x += player->cos_angle * player->speed;
-		player->y += player->sin_angle * player->speed;
+		new_x += player->cos_angle * player->speed;
+		new_y += player->sin_angle * player->speed;
 	}
 	if (player->down)
 	{
-		player->x -= player->cos_angle * player->speed;
-		player->y -= player->sin_angle * player->speed;
+		new_x -= player->cos_angle * player->speed;
+		new_y -= player->sin_angle * player->speed;
 	}
 	if (player->left)
 	{
-		player->x += player->cos_angle * player->speed;
-		player->y -= player->sin_angle * player->speed;
+		new_x += player->cos_angle * player->speed;
+		new_y -= player->sin_angle * player->speed;
 	}
 	if (player->right)
 	{
-		player->x -= player->cos_angle * player->speed;
-		player->y += player->sin_angle * player->speed;
+		new_x -= player->cos_angle * player->speed;
+		new_y += player->sin_angle * player->speed;
+	}
+	if (!hit_wall(new_x + collision_offset, new_y + collision_offset, player->game) &&
+		!hit_wall(new_x - collision_offset, new_y - collision_offset, player->game) &&
+		!hit_wall(new_x + collision_offset, new_y - collision_offset, player->game) &&
+		!hit_wall(new_x - collision_offset, new_y + collision_offset, player->game))
+	{
+		player->x = new_x;
+		player->y = new_y;
 	}
 }
 
