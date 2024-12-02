@@ -158,6 +158,7 @@ int draw_game(t_game *game)
 
 	// draw wall after the background
 	draw_wall(game);
+	draw_minimap(game);
 	// put final image to window
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->img);

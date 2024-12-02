@@ -186,5 +186,6 @@ void ray_init(t_ray *ray);
 bool hit_wall(float px, float py, t_game *game);
 int key_press(int keycode, t_player *player);
 int key_release(int keycode, t_player *player);
+void draw_minimap(t_game *game);
 
 #endif
