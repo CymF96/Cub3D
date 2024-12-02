@@ -3,8 +3,20 @@ NAME = cub3D
 OBJDIR = OBJ
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g
-MLXDIR = minilibx-linux/
-MLX = $(MLXDIR)libmlx.a
+
+# OS detection
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Linux)
+    MLXDIR = minilibx-linux/
+    MLX = $(MLXDIR)libmlx.a
+    MLXFLAGS = -lXext -lX11 -lm
+else ifeq ($(UNAME_S),Darwin)
+    MLXDIR = minilibx_mac/
+    MLX = $(MLXDIR)libmlx.a
+    MLXFLAGS = -framework OpenGL -framework AppKit
+    CFLAGS += -DGL_SILENCE_DEPRECATION
+endif
+
 LIBFTDIR = libft/
 LIBFT = $(LIBFTDIR)libft.a
 INC = -I ./includes/ -I $(MLXDIR) -I $(LIBFTDIR)
@@ -23,8 +35,8 @@ CFILES =	src/cub3d.c\
 			src/pixel_img.c\
 			src/raycasting.c\
 			src/utils.c
-			
-# CFILESB = 
+
+# CFILESB =
 OFILES = $(patsubst src/%.c, $(OBJDIR)/%.o, $(CFILES))
 # OFILESB = $(CFILESB:%.c=%.o)
 
@@ -41,12 +53,12 @@ $(MLX):
 	@$(MAKE) -C $(MLXDIR)
 
 $(NAME): $(OFILES) $(LIBFT) $(MLX)
-	@$(CC) $(CFLAGS) $(OFILES) $(MLX) $(LIBFT) -lXext -lX11 -lm -o $(NAME)
+	@$(CC) $(CFLAGS) $(OFILES) $(MLX) $(LIBFT) $(MLXFLAGS) -o $(NAME)
 	@echo "Making cub3D"
 
 # $(NAME2): $(OFILESB) $(LIBFT) $(MLX)
-	# @$(CC) $(CFLAGS) $(OFILESB) $(MLX) $(LIBFT) -lXext -lX11 -lm -o $(NAME2)
-	# @echo "Making cub3D_bonus"
+# @$(CC) $(CFLAGS) $(OFILESB) $(MLX) $(LIBFT) $(MLXFLAGS) -o $(NAME2)
+# @echo "Making cub3D_bonus"
 
 $(OBJDIR)/%.o: src/%.c | $(OBJDIR)
 	@$(CC) $(CFLAGS) $(INC) -c $< -o $@

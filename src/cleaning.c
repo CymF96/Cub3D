@@ -12,9 +12,9 @@
 
 #include "cub3d.h"
 
-void	clean_map(t_game *cub)
+void clean_map(t_game *cub)
 {
-	int	i;
+	int i;
 
 	i = 0;
 	while (cub->map[i] != NULL)
@@ -23,10 +23,10 @@ void	clean_map(t_game *cub)
 	cub->map = NULL;
 }
 
-void	clear_image(t_game *game)
+void clear_image(t_game *game)
 {
-	int	y;
-	int	x;
+	int y;
+	int x;
 
 	y = -1;
 	while (++y < HEIGHT)
@@ -37,7 +37,7 @@ void	clear_image(t_game *game)
 	}
 }
 
-void	destroy_img(t_game *cub)
+void destroy_img(t_game *cub)
 {
 	if (cub->north->img != NULL)
 		mlx_destroy_image(cub->mlx, cub->north->img);
@@ -57,7 +57,7 @@ void	destroy_img(t_game *cub)
 		free(cub->east);
 }
 
-void	free_textures(t_game *cub)
+void free_textures(t_game *cub)
 {
 	destroy_img(cub);
 	if (cub->img != NULL)
@@ -72,7 +72,7 @@ void	free_textures(t_game *cub)
 		free(cub->ea);
 }
 
-void	free_game_struct(t_game *cub)
+void free_game_struct(t_game *cub)
 {
 	if (cub->win != NULL)
 	{
@@ -81,7 +81,9 @@ void	free_game_struct(t_game *cub)
 	}
 	if (cub->mlx != NULL)
 	{
+#ifdef __linux__
 		mlx_destroy_display(cub->mlx);
+#endif
 		if (cub->mlx != NULL)
 		{
 			free(cub->mlx);
@@ -90,7 +92,7 @@ void	free_game_struct(t_game *cub)
 	}
 }
 
-void	clean_game(t_game *cub)
+void clean_game(t_game *cub)
 {
 	if (cub->map != NULL)
 		clean_map(cub);

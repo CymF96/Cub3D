@@ -12,7 +12,7 @@
 
 #include "cub3d.h"
 
-int	key_press(int keycode, t_player *player)
+int key_press(int keycode, t_player *player)
 {
 	if (keycode == ESC)
 		player->exit = true;
@@ -31,7 +31,7 @@ int	key_press(int keycode, t_player *player)
 	return (0);
 }
 
-int	key_release(int keycode, t_player *player)
+int key_release(int keycode, t_player *player)
 {
 	if (keycode == ESC)
 		player->exit = false;
@@ -50,9 +50,8 @@ int	key_release(int keycode, t_player *player)
 	return (0);
 }
 
-
-//changing the angle of player by angle_speed when arrow pressed
-void	rotation(t_player *player)
+// changing the angle of player by angle_speed when arrow pressed
+void rotation(t_player *player)
 {
 	if (player->ro_left)
 		player->angle -= player->angle_speed;
@@ -64,12 +63,12 @@ void	rotation(t_player *player)
 		player->angle = 2 * PI;
 }
 
-//updating cos and sin angle to calculate the new x and y of player
-void	key_movement(t_player *player) // add checker for the wall coalistion 
+// updating cos and sin angle to calculate the new x and y of player
+void key_movement(t_player *player) // add checker for the wall coalistion
 {
 	if (player->up)
 	{
-		//testing wall coalition checker
+		// testing wall coalition checker
 		player->x += player->cos_angle * player->speed;
 		player->y += player->sin_angle * player->speed;
 	}
@@ -90,12 +89,15 @@ void	key_movement(t_player *player) // add checker for the wall coalistion
 	}
 }
 
-void	move_player(t_player *player)
+void move_player(t_player *player)
 {
-	//change the player x and y position and the angle depending on the keycode
 	if (player->exit)
 	{
+#ifdef __linux__
 		mlx_loop_end(player->game->mlx);
+#else
+		mlx_destroy_window(player->game->mlx, player->game->win);
+#endif
 		ft_exit(NULL, player->game, 0);
 	}
 	player->cos_angle = cos(player->angle);
@@ -106,9 +108,13 @@ void	move_player(t_player *player)
 		rotation(player);
 }
 
-int	cross_close_window(t_game *cub)
+int cross_close_window(t_game *cub)
 {
+#ifdef __linux__
 	mlx_loop_end(cub->mlx);
+#else
+	mlx_destroy_window(cub->mlx, cub->win);
+#endif
 	ft_exit(NULL, cub, 0);
 	return (0);
 }

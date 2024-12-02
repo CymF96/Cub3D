@@ -37,7 +37,7 @@ $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
 $(NAME): $(OBJDIR) $(OFILES)
-	@ar rcs $@ $(OFILES) $(LDFLAGS)
+	@ar rcs $@ $(OFILES)
 	@echo "Making Library libft.a"
 
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
