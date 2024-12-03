@@ -6,33 +6,33 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 10:16:32 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:33:29 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-bool	closed_by_walls(t_game *cub)
+bool	closed_by_walls(t_game *game)
 {
 	int	i;
 	int	j;
 
 	i = -1;
-	while (cub->map[++i] != NULL)
+	while (game->map[++i] != NULL)
 	{
 		j = -1;
-		while (cub->map[i][++j] != '\0')
+		while (game->map[i][++j] != '\0')
 		{
-			if (i == 0 && cub->map[i][j] == '0')
+			if (i == 0 && game->map[i][j] == '0')
 				return (false);
-			else if (cub->map[i + 1] == NULL && cub->map[i][j] == '0')
+			else if (game->map[i + 1] == NULL && game->map[i][j] == '0')
 				return (false);
-			else if (cub->map[i][j] == ' ')
+			else if (game->map[i][j] == ' ')
 			{
-				if (i != 0 && cub->map[i - 1][j] == '0')
+				if (i != 0 && game->map[i - 1][j] == '0')
 					return (false);
-				else if (cub->map[i + 1] != NULL \
-						&& cub->map[i + 1][j] == '0')
+				else if (game->map[i + 1] != NULL \
+						&& game->map[i + 1][j] == '0')
 					return (false);
 			}
 		}
@@ -40,7 +40,7 @@ bool	closed_by_walls(t_game *cub)
 	return (true);
 }
 
-void	check_color_format(t_game *cub, int	*array)
+void	check_color_format(t_game *game, int	*array)
 {
 	int	i;
 
@@ -48,13 +48,12 @@ void	check_color_format(t_game *cub, int	*array)
 	while (i < 3)
 	{
 		if (array[i] < 0 || array[i] > 255)
-			ft_exit("RGB format incorrect, please enter color \
-				format in RGB (between 0 and 255)", cub, 1);
+			ft_exit("RGB format incorrect", game, 1);
 		i++;
 	}
 }
 
-void	case_with_1(t_game *cub, char *line, int i)
+void	case_with_1(t_game *game, char *line, int i)
 {
 	int	j;
 
@@ -64,59 +63,58 @@ void	case_with_1(t_game *cub, char *line, int i)
 		j++;
 		if (line[j] != '1' && line[j] != '\n' \
 			&& line[j] != ' ' && line[j] != '\0')
-			ft_exit("map is not closed/surrounded by walls", cub, 1);
+			ft_exit("map is not closed/surrounded by walls", game, 1);
 	}
 }
 
 //check if the line is a wall map and so if there is only 1 // check also correct id char
-void	map_identifiers(t_game *cub, char *line, int i)
+void	map_identifiers(t_game *game, char *line, int i)
 {
 	while (line[i] != '\0')
 	{
 		if (line[i] == '1')
-			case_with_1(cub, line, i);
+			case_with_1(game, line, i);
 		else if (line[i] == '\0')
 			break ;
 		else if (line[i] == '0')
 		{
 			if (line[i + 1] == '\n' || line[i + 1] == '\0' \
 				|| line[i + 1] == ' ')
-				ft_exit("map is not closed/surrounded by walls", cub, 1);
+				ft_exit("map is not closed/surrounded by walls", game, 1);
 		}
 		else if (line[i] == 'N' || line[i] == 'S' \
 					|| line[i] == 'W' || line[i] == 'E')
-			cub->player_pos++;
+			game->player_pos++;
 		else if (line[i] != ' ' && line[i] != '\n')
-			ft_exit("map identifier not recognised, please \
-				used only 1, 0 or N/S/W/E", cub, 1);
+			ft_exit("Wrong map token", game, 1);
 		i++;
 	}
-	copy_map(cub, line);
+	copy_map(game, line);
 }
 
 //main function to analyse the input from gnl
-void	analyse_line(t_game *cub, char *line)
+void	analyse_line(t_game *game, char *line)
 {
 	int	i;
 
 	i = 0;
 	while (line[i] != '\0' && line[i] == ' ') //as long as there is space and it is not the end of the line continue
 		i++;
-	if (texture_info(cub, line, i)) // checking if we got a texture information like nroth path or ceiling rgb color 
+	if (texture_info(game, line, i)) // checking if we got a texture information like nroth path or ceiling rgb color 
 		return ;
-	if (line[i] == '1' && cub->no && cub->so && cub->we && \
-			cub->ea && cub->f[0] != -1 && cub->f[1] != -1 && \
-			cub->f[2] != -1 && cub->c[0] != -1 && \
-			cub->c[1] != -1 && cub->c[2] != -1)
+	if (line && line[i] == '1' && game->no && game->so && game->we && \
+			game->ea && game->f[0] != -1 && game->f[1] != -1 && \
+			game->f[2] != -1 && game->c[0] != -1 && \
+			game->c[1] != -1 && game->c[2] != -1)
 	{
-		map_identifiers(cub, line, i); // if the line start by 1, we are entering the map parsing step so additional check in map id
+		map_identifiers(game, line, i); // if the line start by 1, we are entering the map parsing step so additional check in map id
 		return ;
 	}
 	else if (line[i] == '\n')
 		return ;
 	else if (line[i] == '0')
-		ft_exit("map is not closed/surrounded by walls", cub, 1); // as we always check the 1st element of the line (after the texture info) it most be either a space or a 1, if a 0 is meat then the walls are not closed
+		ft_exit("map is not closed/surrounded by walls", game, 1); // as we always check the 1st element of the line (after the texture info) it most be either a space or a 1, if a 0 is meat then the walls are not closed
 	else
-		ft_exit("A format error has been encountered in the map file", cub, 1); // any other char is an error
+		ft_exit("File format is wrong", game, 1); // any other char is an error
 	return ;
 }

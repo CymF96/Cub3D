@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 14:27:13 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:42:46 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ void	initialization(t_game *game)
 	game->we = NULL;
 	game->ea = NULL;
 	game->map = NULL;
+	game->line = NULL;
 	game->map_height = 0;
 	game->bpp = 0;
 	game->size_line = 0;

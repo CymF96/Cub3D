@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:52 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 10:16:22 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/03 09:45:06 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,22 +24,22 @@ int	ft_lines_count(char **tab)
 	return (lines);
 }
 
-void	*safe_malloc(size_t size, t_game *cub)
+void	*safe_malloc(size_t size, t_game *game)
 {
 	void	*ptr;
 
 	ptr = malloc(size);
 	if (ptr == NULL)
-		ft_exit("malloc failed", cub, 1);
+		ft_exit("malloc failed", game, 1);
 	return (ptr);
 }
 
-void	ft_exit(const char *str, t_game *cub, int flag)
+void	ft_exit(const char *str, t_game *game, int flag)
 {
 	if (str != NULL)
 		printf("Error:\n%s\n", str);
-	if (cub != NULL)
-		clean_game(cub);
+	if (game != NULL)
+		clean_game(game);
 	if (flag == 1)
 		exit(EXIT_FAILURE);
 	else

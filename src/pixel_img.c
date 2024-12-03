@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:15:07 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 17:18:54 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/03 17:29:30 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	put_pixel(int x, int y, int color, t_game *game)
 {
 	int index;
 
-	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
+	if (x >= WIDTH - 1 || y >= HEIGHT - 1 || x < 0 || y < 0)
 		return ;
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
 	index = y * game->size_line + x * game->bpp / 8;
@@ -101,10 +101,8 @@ int	get_pixel_image(t_game *game, t_ray *ray)
 		temp = game->east;
 	else
 		return (0);
-	// printf("tex_id: %d\n", ray->tex_id);
 	ray->tex_x = ray->tex_x % temp->width;
-	ray->tex_y = ray->tex_y % temp->height;
-	// printf("Af tex_x: %d\n", ray->tex_x);
+	ray->tex_y = ray->tex_y % temp->height -1;
 	if (ray->tex_x >= 0 && ray->tex_x < temp->width && ray->tex_y >= 0 && ray->tex_y < temp->height)
 	{
 		pixel = temp->data + (ray->tex_y * temp->size_line + ray->tex_x * (temp->bpp / 8));
