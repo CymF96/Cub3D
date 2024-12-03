@@ -1,0 +1,14 @@
+NO ./textures/doesntexist.xpm
+SO ./textures/doesntexist.xpm
+WE ./textures/doesntexist.xpm
+EA ./textures/doesntexist.xpm
+
+F 0,255,0
+C 0,0,255
+
+1111111111
+1010000001
+10100W0001
+1010000101
+1000000001
+1111111111

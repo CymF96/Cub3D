@@ -6,13 +6,13 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/11/29 13:33:00 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/03 17:34:56 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	key_press(int keycode, t_player *player)
+int key_press(int keycode, t_player *player)
 {
 	if (keycode == ESC)
 		player->exit = true;
@@ -31,7 +31,7 @@ int	key_press(int keycode, t_player *player)
 	return (0);
 }
 
-int	key_release(int keycode, t_player *player)
+int key_release(int keycode, t_player *player)
 {
 	if (keycode == ESC)
 		player->exit = false;
@@ -50,9 +50,8 @@ int	key_release(int keycode, t_player *player)
 	return (0);
 }
 
-
-//changing the angle of player by angle_speed when arrow pressed
-void	rotation(t_player *player)
+// changing the angle of player by angle_speed when arrow pressed
+void rotation(t_player *player)
 {
 	if (player->ro_left)
 		player->angle -= player->angle_speed;
@@ -64,35 +63,48 @@ void	rotation(t_player *player)
 		player->angle = 2 * PI;
 }
 
-//updating cos and sin angle to calculate the new x and y of player
-void	key_movement(t_player *player) // add checker for the wall coalistion 
+// updating cos and sin angle to calculate the new x and y of player
+void key_movement(t_player *player)
 {
+	float new_x;
+	float new_y;
+	float collision_offset;
+
+	new_x = player->x;
+	new_y = player->y;
+	collision_offset = 5.0;
 	if (player->up)
 	{
-		//testing wall coalition checker
-		player->x += player->cos_angle * player->speed;
-		player->y += player->sin_angle * player->speed;
+		new_x += player->cos_angle * player->speed;
+		new_y += player->sin_angle * player->speed;
 	}
 	if (player->down)
 	{
-		player->x -= player->cos_angle * player->speed;
-		player->y -= player->sin_angle * player->speed;
+		new_x -= player->cos_angle * player->speed;
+		new_y -= player->sin_angle * player->speed;
 	}
 	if (player->left)
 	{
-		player->x += player->cos_angle * player->speed;
-		player->y -= player->sin_angle * player->speed;
+		new_x += player->cos_angle * player->speed;
+		new_y -= player->sin_angle * player->speed;
 	}
 	if (player->right)
 	{
-		player->x -= player->cos_angle * player->speed;
-		player->y += player->sin_angle * player->speed;
+		new_x -= player->cos_angle * player->speed;
+		new_y += player->sin_angle * player->speed;
+	}
+	if (!hit_wall(new_x + collision_offset, new_y + collision_offset, player->game) &&
+		!hit_wall(new_x - collision_offset, new_y - collision_offset, player->game) &&
+		!hit_wall(new_x + collision_offset, new_y - collision_offset, player->game) &&
+		!hit_wall(new_x - collision_offset, new_y + collision_offset, player->game))
+	{
+		player->x = new_x;
+		player->y = new_y;
 	}
 }
 
-void	move_player(t_player *player)
+void move_player(t_player *player)
 {
-	//change the player x and y position and the angle depending on the keycode
 	if (player->exit)
 	{
 		mlx_loop_end(player->game->mlx);
@@ -106,9 +118,13 @@ void	move_player(t_player *player)
 		rotation(player);
 }
 
-int	cross_close_window(t_game *cub)
+int cross_close_window(t_game *cub)
 {
+#ifdef __linux__
 	mlx_loop_end(cub->mlx);
+#else
+	mlx_destroy_window(cub->mlx, cub->win);
+#endif
 	ft_exit(NULL, cub, 0);
 	return (0);
 }

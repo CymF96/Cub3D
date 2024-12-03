@@ -22,7 +22,8 @@ CFILES =	src/cub3d.c\
 			src/textures.c\
 			src/pixel_img.c\
 			src/raycasting.c\
-			src/utils.c
+			src/utils.c\
+			src/minimap.c
 			
 # CFILESB = 
 OFILES = $(patsubst src/%.c, $(OBJDIR)/%.o, $(CFILES))
