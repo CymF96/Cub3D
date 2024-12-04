@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   game_ctrl.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/03 17:34:56 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 09:32:51 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,15 +83,15 @@ void key_movement(t_player *player)
 		new_x -= player->cos_angle * player->speed;
 		new_y -= player->sin_angle * player->speed;
 	}
-	if (player->left)
-	{
-		new_x += player->cos_angle * player->speed;
-		new_y -= player->sin_angle * player->speed;
-	}
 	if (player->right)
 	{
-		new_x -= player->cos_angle * player->speed;
-		new_y += player->sin_angle * player->speed;
+		new_y += player->cos_angle * player->speed;
+		new_x -= player->sin_angle * player->speed;
+	}
+	if (player->left)
+	{
+		new_y -= player->cos_angle * player->speed;
+		new_x += player->sin_angle * player->speed;
 	}
 	if (!hit_wall(new_x + collision_offset, new_y + collision_offset, player->game) &&
 		!hit_wall(new_x - collision_offset, new_y - collision_offset, player->game) &&

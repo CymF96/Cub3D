@@ -22,6 +22,7 @@ CFILES =	src/cub3d.c\
 			src/textures.c\
 			src/pixel_img.c\
 			src/raycasting.c\
+			src/mouse.c\
 			src/utils.c\
 			src/minimap.c
 			

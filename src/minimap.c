@@ -93,8 +93,8 @@ void draw_minimap(t_game *game)
 	int dir_y;
 
 	mini_tile = 8;
-	mini_x = WIDTH - 300;
-	mini_y = HEIGHT - 120;
+	mini_x = 0;
+	mini_y = 0;
 
 	draw_map_tiles(game, mini_tile, mini_x, mini_y);
 
