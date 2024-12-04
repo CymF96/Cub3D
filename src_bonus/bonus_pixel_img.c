@@ -110,3 +110,19 @@ int	get_pixel_image(t_game *game, t_ray *ray)
 	}
 	return (0);
 }
+
+int	get_pixel_image_door(t_game *game, t_ray *ray)
+{
+	char	*pixel;
+	t_tex	*temp;
+
+	temp = game->door;
+	ray->tex_x = ray->tex_x % temp->width;
+	ray->tex_y = ray->tex_y % temp->height;
+	if (ray->tex_x >= 0 && ray->tex_x < temp->width && ray->tex_y >= 0 && ray->tex_y < temp->height)
+	{
+		pixel = temp->data + (ray->tex_y * temp->size_line + ray->tex_x * (temp->bpp / 8));
+		return (*(int *)pixel);
+	}
+	return (0);
+}

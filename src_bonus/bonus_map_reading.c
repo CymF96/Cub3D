@@ -6,22 +6,22 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:23 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:10:05 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:17:59 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus_cub3d.h"
 
 /*DEBUGGING -- PRINTING MAP FILE INFO*/
-// for (int i = 0; game->map[i] != NULL; i++)
-// 	printf("%s", game->map[i]);
-// printf("\n");
-// for (int i = 0; i < 3; i++)
-// 	printf("%d, ", game->f[i]);
-// printf("\n");
-// for (int i = 0; i < 3; i++)
-// 	printf("%d, ", game->c[i]);
-// printf("\n%s\n%s\n%s\n%s\n", game->no, game->so, game->we, game->ea);
+	// for (int i = 0; game->map[i] != NULL; i++)
+	// 	printf("%s", game->map[i]);
+	// printf("\n");
+	// for (int i = 0; i < 3; i++)
+	// 	printf("%d, ", game->f[i]);
+	// printf("\n");
+	// for (int i = 0; i < 3; i++)
+	// 	printf("%d, ", game->c[i]);
+	// printf("\n%s\n%s\n%s\n%s\n%s\n", game->no, game->so, game->we, game->ea, game->dr);
 /**DEBUGGING -- PRINTING MAP FILE INFO*/
 
 void check_map_rules(t_game *game)
@@ -84,6 +84,11 @@ void find_player_position(t_game *game)
 				game->player.x = (j + 0.5) * BLOCK_SIZE;
 				game->player.y = (i + 0.5) * BLOCK_SIZE;
 				game->player.direction = game->map[i][j];
+			}
+			else if (game->map[i][j] == 'D')
+			{
+				game->d.x = (j + 0.5) * BLOCK_SIZE;
+				game->d.y = (i + 0.5) * BLOCK_SIZE;
 			}
 			j++;
 		}

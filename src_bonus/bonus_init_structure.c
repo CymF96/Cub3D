@@ -58,10 +58,16 @@ void	init_player(t_player *player, t_game *game)
 	player->exit = false;
 	player->ro_left = false;
 	player->ro_right = false;
+	player->door = false;
 	player->speed = 3;
 	player->angle_speed = 0.1;
 	player->angle = 0;
 	player->game = game;
+}
+
+void	door_init(t_door *d)
+{
+	d->open = false;
 }
 
 void	initialization(t_game *game)
@@ -74,10 +80,12 @@ void	initialization(t_game *game)
 	game->south = NULL;
 	game->west = NULL;
 	game->east = NULL;
+	game->door = NULL;
 	game->no = NULL;
 	game->so = NULL;
 	game->we = NULL;
 	game->ea = NULL;
+	game->dr = NULL;
 	game->map = NULL;
 	game->line = NULL;
 	game->map_height = 0;
@@ -90,4 +98,5 @@ void	initialization(t_game *game)
 	ft_memset(game->f, -1, sizeof(game->f));
 	ft_memset(game->c, -1, sizeof(game->c));
 	ray_init(&game->ray);
+	door_init(&game->d);
 }

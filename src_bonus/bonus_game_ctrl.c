@@ -24,6 +24,8 @@ int key_press(int keycode, t_player *player)
 		player->left = true;
 	if (keycode == D)
 		player->right = true;
+	if (keycode == E)
+		player->door = true;
 	if (keycode == RIGHT)
 		player->ro_right = true;
 	if (keycode == LEFT)
@@ -60,7 +62,7 @@ void rotation(t_player *player)
 	if (player->angle > 2 * PI)
 		player->angle = 0;
 	if (player->angle < 0)
-		player->angle = 2 * PI;
+		player->angle += 2 * PI;
 }
 
 // updating cos and sin angle to calculate the new x and y of player
@@ -72,7 +74,7 @@ void key_movement(t_player *player)
 
 	new_x = player->x;
 	new_y = player->y;
-	collision_offset = 5.0;
+	collision_offset = 2.0;
 	if (player->up)
 	{
 		new_x += player->cos_angle * player->speed;
@@ -96,7 +98,11 @@ void key_movement(t_player *player)
 	if (!hit_wall(new_x + collision_offset, new_y + collision_offset, player->game) &&
 		!hit_wall(new_x - collision_offset, new_y - collision_offset, player->game) &&
 		!hit_wall(new_x + collision_offset, new_y - collision_offset, player->game) &&
-		!hit_wall(new_x - collision_offset, new_y + collision_offset, player->game))
+		!hit_wall(new_x - collision_offset, new_y + collision_offset, player->game) &&
+		!hit_door(new_x + collision_offset, new_y + collision_offset, player->game) &&
+		!hit_door(new_x - collision_offset, new_y - collision_offset, player->game) &&
+		!hit_door(new_x + collision_offset, new_y - collision_offset, player->game) &&
+		!hit_door(new_x - collision_offset, new_y + collision_offset, player->game))
 	{
 		player->x = new_x;
 		player->y = new_y;
@@ -120,11 +126,7 @@ void move_player(t_player *player)
 
 int cross_close_window(t_game *cub)
 {
-#ifdef __linux__
 	mlx_loop_end(cub->mlx);
-#else
-	mlx_destroy_window(cub->mlx, cub->win);
-#endif
 	ft_exit(NULL, cub, 0);
 	return (0);
 }

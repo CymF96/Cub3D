@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:55 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:09:46 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:09:26 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	init_game(t_game *game)
 	game->south = load_tex(game, game->so);
 	game->west = load_tex(game, game->we);
 	game->east = load_tex(game, game->ea);
+	game->door = load_tex(game, game->dr);
 }
 
 //setting up the player angle according to the facing direction

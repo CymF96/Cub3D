@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:41 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:09:57 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:10:03 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ int	texture_info(t_game *game, char *line, int i)
 		game->we = ft_copy_path(game, line);
 	else if (line[i] == 'E' && line[i + 1] == 'A' && line[i + 2] == ' ')
 		game->ea = ft_copy_path(game, line);
+	else if (line[i] == 'D' && line[i + 1] == 'O' && line[i + 2] == ' ')
+		game->dr = ft_copy_path(game, line);
 	else if (line[i] == 'F')
 	{
 		ft_copy_color(game, game->f, line);

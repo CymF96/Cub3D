@@ -2,9 +2,9 @@
 	"version": "2.0.0",
 	"tasks": [
 	  {
-		"label": "Build cub3D",
+		"label": "Build bonus cub3D",
 		"type": "shell",
-		"command": "make",
+		"command": "make bonus",
 		"args": ["re"],
 		"group": {
 		  "kind": "build",
@@ -16,9 +16,9 @@
 	  {
 		"label": "Run cub3D",
 		"type": "shell",
-		"command": "./cub3D",
-		"args": ["maps/small.cub"],
-		"dependsOn": "Build cub3D",
+		"command": "./bonus_cub3D",
+		"args": ["maps/bonus/small_door.cub"],
+		"dependsOn": "Build bonus cub3D",
 		"group": {
 		  "kind": "test",
 		  "isDefault": false

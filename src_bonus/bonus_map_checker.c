@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:09:51 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:17:16 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	map_identifiers(t_game *game, char *line, int i)
 		else if (line[i] == 'N' || line[i] == 'S' \
 					|| line[i] == 'W' || line[i] == 'E')
 			game->player_pos++;
-		else if (line[i] != ' ' && line[i] != '\n')
+		else if (line[i] != ' ' && line[i] != '\n' && line[i] != 'D')
 			ft_exit("Wrong map token", game, 1);
 		i++;
 	}
@@ -103,7 +103,7 @@ void	analyse_line(t_game *game, char *line)
 	if (texture_info(game, line, i)) // checking if we got a texture information like nroth path or ceiling rgb color 
 		return ;
 	if (line && line[i] == '1' && game->no && game->so && game->we && \
-			game->ea && game->f[0] != -1 && game->f[1] != -1 && \
+			game->ea && game->dr && game->f[0] != -1 && game->f[1] != -1 && \
 			game->f[2] != -1 && game->c[0] != -1 && \
 			game->c[1] != -1 && game->c[2] != -1)
 	{
