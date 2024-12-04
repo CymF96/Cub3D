@@ -1,4 +1,16 @@
-#include "cub3d.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bonus_minimap.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/04 11:10:11 by cofische          #+#    #+#             */
+/*   Updated: 2024/12/04 11:10:15 by cofische         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "bonus_cub3d.h"
 
 void draw_tile(int x, int y, int mini_tile, int color, t_game *game)
 {
