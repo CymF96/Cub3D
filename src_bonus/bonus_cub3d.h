@@ -6,12 +6,12 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:09:26 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 16:09:06 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CUB3D_H
-#define CUB3D_H
+#ifndef BONUS_CUB3D_H
+#define BONUS_CUB3D_H
 
 #include <stdlib.h>
 #include <math.h>
@@ -39,10 +39,20 @@
 #define S 115
 #define A 97
 #define D 100
+#define E 101
 #define LEFT 65361
 #define RIGHT 65363
+#define DOOR_TIMEOUT 10
 
 typedef struct s_game t_game;
+
+typedef struct s_door
+{
+	int	x;
+	int	y;
+	bool	open;
+	struct timeval open_time;	
+}	t_door;
 
 typedef struct s_ray
 {
@@ -95,6 +105,7 @@ typedef struct s_player
 	bool right;
 	bool left;
 	bool exit;
+	bool door;
 	bool ro_left;
 	bool ro_right;
 	char direction;
@@ -109,8 +120,10 @@ typedef struct s_game
 	t_tex *south;
 	t_tex *west;
 	t_tex *east;
+	t_tex *door;
 	t_ray ray;
 	t_player player;
+	t_door d;
 	void *img;
 	int bpp;
 	int size_line;
@@ -127,6 +140,7 @@ typedef struct s_game
 	char *so;
 	char *we;
 	char *ea;
+	char *dr;
 	int f[3];
 	int c[3];
 	int ceiling_color;
@@ -174,5 +188,9 @@ int key_press(int keycode, t_player *player);
 int key_release(int keycode, t_player *player);
 void draw_minimap(t_game *game);
 void	mouse_move(t_game *game);
+bool	hit_door(float px, float py, t_game *game);
+void check_door_timeout(t_game *game);
+int	get_pixel_image_door(t_game *game, t_ray *ray);
+void	door_movement(t_game *game, t_player *player);
 
 #endif

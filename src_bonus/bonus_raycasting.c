@@ -62,10 +62,20 @@ void render_wall(t_game *game, t_ray *ray, int x)
 		ray->start_wall %= HEIGHT; 	 // if wall is bigger than screen, do a modulo so it start at correct position
 	pos = (ray->start_wall - HEIGHT / 2 + ray->height_wall / 2) * ray->step; // getting the step converted into pixel side for correct dimension in pixel loop
 	while (ray->start_wall < ray->end_wall)						 // add curent pixel wall to mlx_data for final image
-	{														 // cheking the ray assignement
-		ray->tex_y = (int)pos % BLOCK_SIZE;						 // using binary AND op to ensure pixel not get out of TILE_HEIGHT
-		color = get_pixel_image(game, &game->ray);
-		put_pixel(x, ray->start_wall, color, game);
+	{
+		int map_x = (int)(ray->ray_x / BLOCK_SIZE);
+        int map_y = (int)(ray->ray_y / BLOCK_SIZE);														 // cheking the ray assignement
+		ray->tex_y = (int)pos % BLOCK_SIZE;
+        if (game->map[map_y][map_x] == 'D' && !game->d.open)
+		{ 
+			color = get_pixel_image_door(game, &game->ray);
+            put_pixel(x, ray->start_wall, color, game);								 // using binary AND op to ensure pixel not get out of TILE_HEIGHT
+		}
+		else
+		{
+			color = get_pixel_image(game, &game->ray);
+			put_pixel(x, ray->start_wall, color, game);
+		}
 		pos += ray->step;
 		ray->start_wall++;
 	}
@@ -77,7 +87,7 @@ void draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	// set the ray start point as player postion on screen
 	game->ray.ray_x = player->x;
 	game->ray.ray_y = player->y;
-	while (!hit_wall(game->ray.ray_x, game->ray.ray_y, game)) // problem
+	while (!hit_wall(game->ray.ray_x, game->ray.ray_y, game) && !hit_door(game->ray.ray_x, game->ray.ray_y, game)) // problem
 	{
 		// inscreasing ray movement until getting the wall hit point
 		/*DEBUGGING SHOWING THE FOV CAST IN RED*/
@@ -110,38 +120,36 @@ void draw_line(t_player *player, t_game *game, float ray_angle, int i)
 }
 
 /*DEBUGGING SHOWING THE MAP ON 2D GRID*/
-void draw_square(int x, int y, int size, int color, t_game *game)
-{
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + size, y + i, color, game);
-	for (int i = 0; i < size; i++)
-		put_pixel(x + i, y + size, color, game);
-}
+// void draw_square(int x, int y, int size, int color, t_game *game)
+// {
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + i, y, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x, y + i, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + size, y + i, color, game);
+// 	for (int i = 0; i < size; i++)
+// 		put_pixel(x + i, y + size, color, game);
+// }
 
-void draw_map(t_game *game)
-{
-	char **map = game->map;
-	int color = 0x0000FF;
-	for (int y = 0; map[y]; y++)
-	{
-		for (int x = 0; map[y][x]; x++)
-		{
-			if (map[y][x] == '1')
-				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
-		}
-	}
-}
+// void draw_map(t_game *game)
+// {
+// 	char **map = game->map;
+// 	int color = 0x0000FF;
+// 	for (int y = 0; map[y]; y++)
+// 	{
+// 		for (int x = 0; map[y][x]; x++)
+// 		{
+// 			if (map[y][x] == '1')
+// 				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
+// 		}
+// 	}
+// }
 /*DEBUGGING SHOWING THE MAP ON 2D GRID*/
 
 int draw_game(t_game *game)
 {
 	// creating the final img pointer and data addrs to be use for screen display
-	mouse_move(game);
-	move_player(&game->player);
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
 
@@ -157,6 +165,10 @@ int draw_game(t_game *game)
 	// draw wall after the background
 	draw_wall(game);
 	draw_minimap(game);
+	mouse_move(game);
+	move_player(&game->player);
+	door_movement(game, &game->player);
+	check_door_timeout(game);
 	// put final image to window
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->img);

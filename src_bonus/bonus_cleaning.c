@@ -59,6 +59,11 @@ void destroy_img(t_game *game)
 		mlx_destroy_image(game->mlx, game->east->img);
 		free(game->east);
 	}
+	if (game->door != NULL && game->door->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->door->img);
+		free(game->door);
+	}
 }
 
 void free_textures(t_game *game)
@@ -71,6 +76,8 @@ void free_textures(t_game *game)
 		free(game->we);
 	if (game->ea)
 		free(game->ea);
+	if (game->dr)
+		free(game->dr);
 }
 
 void free_game_struct(t_game *game)
