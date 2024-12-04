@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_structure.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/03 10:42:46 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 10:23:46 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ void	initialization(t_game *game)
 	game->size_line = 0;
 	game->endian = 0;
 	game->player_pos = 0;
+	game->mouse_delta_x = 0;
+	game->last_mouse_x = WIDTH / 2;
 	ft_memset(game->f, -1, sizeof(game->f));
 	ft_memset(game->c, -1, sizeof(game->c));
 	ray_init(&game->ray);

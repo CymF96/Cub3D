@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/03 17:33:32 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 10:29:33 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@
 #define HEIGHT 1000
 #define BLOCK_SIZE 64
 #define STEP_SIZE 0.25
+#define MOUSE_SEN 0.015
 #define PI 3.14159265359
 #define ESC 65307
 #define W 119
@@ -114,6 +115,8 @@ typedef struct s_game
 	int bpp;
 	int size_line;
 	int endian;
+	float	mouse_delta_x;
+	int last_mouse_x;
 	char *data;
 	int player_pos;
 	char p_dir;
@@ -170,5 +173,6 @@ bool hit_wall(float px, float py, t_game *game);
 int key_press(int keycode, t_player *player);
 int key_release(int keycode, t_player *player);
 void draw_minimap(t_game *game);
+void	mouse_move(t_game *game);
 
 #endif
