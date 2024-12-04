@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_structure.c                                   :+:      :+:    :+:   */
+/*   bonus_init_structure.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 10:58:14 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:09:40 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "bonus_cub3d.h"
 
 void	ray_init(t_ray *ray)
 {
@@ -85,6 +85,8 @@ void	initialization(t_game *game)
 	game->size_line = 0;
 	game->endian = 0;
 	game->player_pos = 0;
+	game->mouse_delta_x = 0;
+	game->last_mouse_x = WIDTH / 2;
 	ft_memset(game->f, -1, sizeof(game->f));
 	ft_memset(game->c, -1, sizeof(game->c));
 	ray_init(&game->ray);

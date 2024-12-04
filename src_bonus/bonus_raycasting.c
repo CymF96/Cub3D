@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raycasting.c                                       :+:      :+:    :+:   */
+/*   bonus_raycasting.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 10:59:38 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:10:35 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "bonus_cub3d.h"
 
 bool hit_wall(float px, float py, t_game *game)
 {
@@ -109,9 +109,38 @@ void draw_line(t_player *player, t_game *game, float ray_angle, int i)
 	/*DEBUGGING SHOWING THE WALL RENDER ON 3D*/
 }
 
+/*DEBUGGING SHOWING THE MAP ON 2D GRID*/
+void draw_square(int x, int y, int size, int color, t_game *game)
+{
+	for (int i = 0; i < size; i++)
+		put_pixel(x + i, y, color, game);
+	for (int i = 0; i < size; i++)
+		put_pixel(x, y + i, color, game);
+	for (int i = 0; i < size; i++)
+		put_pixel(x + size, y + i, color, game);
+	for (int i = 0; i < size; i++)
+		put_pixel(x + i, y + size, color, game);
+}
+
+void draw_map(t_game *game)
+{
+	char **map = game->map;
+	int color = 0x0000FF;
+	for (int y = 0; map[y]; y++)
+	{
+		for (int x = 0; map[y][x]; x++)
+		{
+			if (map[y][x] == '1')
+				draw_square(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, color, game);
+		}
+	}
+}
+/*DEBUGGING SHOWING THE MAP ON 2D GRID*/
+
 int draw_game(t_game *game)
 {
 	// creating the final img pointer and data addrs to be use for screen display
+	mouse_move(game);
 	move_player(&game->player);
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
@@ -127,6 +156,7 @@ int draw_game(t_game *game)
 
 	// draw wall after the background
 	draw_wall(game);
+	draw_minimap(game);
 	// put final image to window
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->img);

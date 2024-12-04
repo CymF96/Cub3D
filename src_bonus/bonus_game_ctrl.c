@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   game_ctrl.c                                        :+:      :+:    :+:   */
+/*   bonus_game_ctrl.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/25 14:54:25 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 10:58:01 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:09:36 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "bonus_cub3d.h"
 
 int key_press(int keycode, t_player *player)
 {
@@ -68,10 +68,11 @@ void key_movement(t_player *player)
 {
 	float new_x;
 	float new_y;
-
+	float collision_offset;
 
 	new_x = player->x;
 	new_y = player->y;
+	collision_offset = 5.0;
 	if (player->up)
 	{
 		new_x += player->cos_angle * player->speed;
@@ -92,8 +93,14 @@ void key_movement(t_player *player)
 		new_y -= player->cos_angle * player->speed;
 		new_x += player->sin_angle * player->speed;
 	}
-	player->x = new_x;
-	player->y = new_y;
+	if (!hit_wall(new_x + collision_offset, new_y + collision_offset, player->game) &&
+		!hit_wall(new_x - collision_offset, new_y - collision_offset, player->game) &&
+		!hit_wall(new_x + collision_offset, new_y - collision_offset, player->game) &&
+		!hit_wall(new_x - collision_offset, new_y + collision_offset, player->game))
+	{
+		player->x = new_x;
+		player->y = new_y;
+	}
 }
 
 void move_player(t_player *player)
@@ -113,7 +120,11 @@ void move_player(t_player *player)
 
 int cross_close_window(t_game *cub)
 {
+#ifdef __linux__
 	mlx_loop_end(cub->mlx);
+#else
+	mlx_destroy_window(cub->mlx, cub->win);
+#endif
 	ft_exit(NULL, cub, 0);
 	return (0);
 }

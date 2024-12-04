@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   launch_game.c                                      :+:      :+:    :+:   */
+/*   bonus_launch_game.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:55 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 10:58:20 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:09:46 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "bonus_cub3d.h"
 
 void	init_game(t_game *game)
 {
@@ -53,6 +53,7 @@ void	start_game(t_game *game)
 	//start loop with player movement
 	mlx_hook(game->win, 2, 1L<<0, key_press, &game->player);
 	mlx_hook(game->win, 3, 1L<<1, key_release, &game->player);
+	mlx_mouse_move(game->mlx, game->win, WIDTH / 2, HEIGHT / 2);
 	mlx_loop_hook(game->mlx, draw_game, game);
 	mlx_loop(game->mlx);
 }
