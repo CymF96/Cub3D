@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_init_structure.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:09:40 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:14:09 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,7 @@ void	initialization(t_game *game)
 	game->dr = NULL;
 	game->map = NULL;
 	game->line = NULL;
+	game->flag = false;
 	game->map_height = 0;
 	game->bpp = 0;
 	game->size_line = 0;

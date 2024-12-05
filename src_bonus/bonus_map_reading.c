@@ -3,33 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_map_reading.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:23 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 16:17:59 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:33:19 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus_cub3d.h"
 
 /*DEBUGGING -- PRINTING MAP FILE INFO*/
-	// for (int i = 0; game->map[i] != NULL; i++)
-	// 	printf("%s", game->map[i]);
-	// printf("\n");
-	// for (int i = 0; i < 3; i++)
-	// 	printf("%d, ", game->f[i]);
-	// printf("\n");
-	// for (int i = 0; i < 3; i++)
-	// 	printf("%d, ", game->c[i]);
-	// printf("\n%s\n%s\n%s\n%s\n%s\n", game->no, game->so, game->we, game->ea, game->dr);
+// for (int i = 0; game->map[i] != NULL; i++)
+// 	printf("%s", game->map[i]);
+// printf("\n");
+// for (int i = 0; i < 3; i++)
+// 	printf("%d, ", game->f[i]);
+// printf("\n"); 
+// for (int i = 0; i < 3; i++)
+// 	printf("%d, ", game->c[i]);
+// printf("\n%s\n%s\n%s\n%s\n%s\n", game->no, game->so, game->we, game->ea, game->dr);
 /**DEBUGGING -- PRINTING MAP FILE INFO*/
 
-void check_map_rules(t_game *game)
+
+void	analyse_line(t_game *game, char *line)
 {
-	if (game->player_pos != 1)
-		ft_exit("Info player incorrect", game, 1);
-	if (!closed_by_walls(game))
-		ft_exit("map is not closed/surrounded by walls", game, 1);
+	int	i;
+
+	i = 0;
+	while (line[i] != '\0' && line[i] == ' ') //as long as there is space and it is not the end of the line continue
+		i++;
+	if (line && line[i] == '1' && game->no && game->so && game->we && \
+		game->ea && game->dr && game->f[0] != -1 && game->f[1] != -1 && \
+		game->f[2] != -1 && game->c[0] != -1 && \
+		game->c[1] != -1 && game->c[2] != -1)
+	{
+		copy_map(game, line);
+		return ;
+	}
+	else
+	{
+		texture_info(game, line, i);
+		return ;
+	}
+	if (line[i] != '\0' || line[i] != '\n')
+	{
+		game->flag = true;
+		return ;
+	} // checking if we got a texture information like nroth path or ceiling rgb color 
 }
 
 // Reading file line by line to parse information in variable
@@ -65,37 +85,7 @@ bool map_format(char *input)
 	}
 	return (false);
 }
-
 // find player and convert the position coordinate into screen + set direction for later initialization
-void find_player_position(t_game *game)
-{
-	int i;
-	int j;
-
-	i = 0;
-	while (game->map[i] != NULL)
-	{
-		j = 0;
-		while (game->map[i][j] != '\0')
-		{
-			if (game->map[i][j] == 'N' || game->map[i][j] == 'S' \
-				|| game->map[i][j] == 'W' || game->map[i][j] == 'E')
-			{
-				game->player.x = (j + 0.5) * BLOCK_SIZE;
-				game->player.y = (i + 0.5) * BLOCK_SIZE;
-				game->player.direction = game->map[i][j];
-			}
-			else if (game->map[i][j] == 'D')
-			{
-				game->d.x = (j + 0.5) * BLOCK_SIZE;
-				game->d.y = (i + 0.5) * BLOCK_SIZE;
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
 bool map_validation(t_game *game, char *input)
 {
 	int fd;
@@ -111,6 +101,5 @@ bool map_validation(t_game *game, char *input)
 	// additionnal map checking
 	check_map_rules(game);
 	// init the player position for raycasting calculation
-	find_player_position(game);
 	return (true);
 }
