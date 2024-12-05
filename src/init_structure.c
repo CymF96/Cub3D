@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_structure.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 10:58:14 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/05 11:21:40 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	initialization(t_game *game)
 	game->east = NULL;
 	game->no = NULL;
 	game->so = NULL;
+	game->flag = false;
 	game->we = NULL;
 	game->ea = NULL;
 	game->map = NULL;

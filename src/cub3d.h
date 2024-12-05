@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 10:56:53 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/05 11:42:36 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ typedef struct s_game
 	char **map;
 	char	*line;
 	int map_height;
+	bool	flag;
 	char *no;
 	char *so;
 	char *we;
@@ -133,9 +134,7 @@ typedef struct s_game
 
 void initialization(t_game *cub);
 void analyse_line(t_game *cub, char *line);
-void map_identifiers(t_game *cub, char *line, int i);
-void case_with_1(t_game *cub, char *line, int i);
-void ft_copy_color(t_game *cub, int *str, char *line);
+void ft_copy_color(int *str, char *line);
 char *ft_copy_path(t_game *cub, char *line);
 void copy_map(t_game *cub, char *line);
 bool map_validation(t_game *cub, char *input);
@@ -147,7 +146,7 @@ void *safe_malloc(size_t size, t_game *cub);
 void ft_exit(const char *str, t_game *cub, int flag);
 void clean_game(t_game *cub);
 int texture_info(t_game *cub, char *line, int i);
-void check_color_format(t_game *cub, int *array);
+int check_color_format(int *array);
 bool closed_by_walls(t_game *cub);
 int cross_close_window(t_game *cub);
 void start_game(t_game *cub);
@@ -170,5 +169,6 @@ void ray_init(t_ray *ray);
 bool hit_wall(float px, float py, t_game *game);
 int key_press(int keycode, t_player *player);
 int key_release(int keycode, t_player *player);
+void find_player_position(t_game *game);
 
 #endif

@@ -4,7 +4,7 @@
 	  {
 		"label": "Build bonus cub3D",
 		"type": "shell",
-		"command": "make bonus",
+		"command": "make",
 		"args": ["re"],
 		"group": {
 		  "kind": "build",
@@ -16,8 +16,8 @@
 	  {
 		"label": "Run cub3D",
 		"type": "shell",
-		"command": "./bonus_cub3D",
-		"args": ["maps/bonus/small_door.cub"],
+		"command": "./cub3D",
+		"args": ["maps/small.cub"],
 		"dependsOn": "Build bonus cub3D",
 		"group": {
 		  "kind": "test",

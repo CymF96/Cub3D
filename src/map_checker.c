@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/03 12:33:29 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/05 13:01:30 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,81 +40,83 @@ bool	closed_by_walls(t_game *game)
 	return (true);
 }
 
-void	check_color_format(t_game *game, int	*array)
+int	check_color_format(int *array)
 {
 	int	i;
 
 	i = 0;
+	if (!array)
+		return (0);
 	while (i < 3)
 	{
 		if (array[i] < 0 || array[i] > 255)
-			ft_exit("RGB format incorrect", game, 1);
+			return (0);
 		i++;
 	}
+	return (1);
 }
 
-void	case_with_1(t_game *game, char *line, int i)
+int	check_file(char *filename)
 {
-	int	j;
+	int	fd;
 
-	j = i + 1; // got to the second char. If not 
-	while (line[j] != '\0' && line[j] == ' ')
-	{
-		j++;
-		if (line[j] != '1' && line[j] != '\n' \
-			&& line[j] != ' ' && line[j] != '\0')
-			ft_exit("map is not closed/surrounded by walls", game, 1);
-	}
+	fd = open(filename, O_RDONLY, 0664);
+	if (fd < 0)
+		return (0);
+	close(fd);
+	return (1);
 }
 
-//check if the line is a wall map and so if there is only 1 // check also correct id char
-void	map_identifiers(t_game *game, char *line, int i)
+int	check_texture(t_game *game)
 {
-	while (line[i] != '\0')
-	{
-		if (line[i] == '1')
-			case_with_1(game, line, i);
-		else if (line[i] == '\0')
-			break ;
-		else if (line[i] == '0')
-		{
-			if (line[i + 1] == '\n' || line[i + 1] == '\0' \
-				|| line[i + 1] == ' ')
-				ft_exit("map is not closed/surrounded by walls", game, 1);
-		}
-		else if (line[i] == 'N' || line[i] == 'S' \
-					|| line[i] == 'W' || line[i] == 'E')
-			game->player_pos++;
-		else if (line[i] != ' ' && line[i] != '\n')
-			ft_exit("Wrong map token", game, 1);
-		i++;
-	}
-	copy_map(game, line);
+	if (!game->no || !game->so || !game->we || ! game->ea)
+		return (0);
+	else if (!check_file(game->no) || !check_file(game->so)\
+			|| !check_file(game->we) || !check_file(game->ea))
+		return (0);
+	else if (!check_color_format(game->c) || !check_color_format(game->f))
+		return (0);
+	else
+		return (1);
 }
 
-//main function to analyse the input from gnl
-void	analyse_line(t_game *game, char *line)
+int	map_info(char **map)
 {
 	int	i;
+	int	j;
 
-	i = 0;
-	while (line[i] != '\0' && line[i] == ' ') //as long as there is space and it is not the end of the line continue
-		i++;
-	if (texture_info(game, line, i)) // checking if we got a texture information like nroth path or ceiling rgb color 
-		return ;
-	if (line && line[i] == '1' && game->no && game->so && game->we && \
-			game->ea && game->f[0] != -1 && game->f[1] != -1 && \
-			game->f[2] != -1 && game->c[0] != -1 && \
-			game->c[1] != -1 && game->c[2] != -1)
+	i = -1;
+	if (!map)
+		return (0);
+	while (map[++i])
 	{
-		map_identifiers(game, line, i); // if the line start by 1, we are entering the map parsing step so additional check in map id
-		return ;
+		j = 0;
+		while (map[i][j] != '\0' && map[i][j] != '\n')
+		{
+			if (map[i][j] != ' ' && map[i][j] != '0' \
+				&& map[i][j] != '1' && map[i][j] != 'N' \
+				&& map[i][j] != 'S' && map[i][j] != 'W' \
+				&& map[i][j] != 'E')
+			{
+				printf("%c\n", map[i][j]);
+				return (0);
+			}
+			j++;
+		}
 	}
-	else if (line[i] == '\n')
-		return ;
-	else if (line[i] == '0')
-		ft_exit("map is not closed/surrounded by walls", game, 1); // as we always check the 1st element of the line (after the texture info) it most be either a space or a 1, if a 0 is meat then the walls are not closed
-	else
-		ft_exit("File format is wrong", game, 1); // any other char is an error
-	return ;
+	return (1);
+}
+
+
+//main function to analyse the input from gnl
+void check_map_rules(t_game *game)
+{
+	if (game->player_pos != 1)
+		ft_exit("Info player incorrect", game, 1);
+	if (!check_texture(game))
+		ft_exit("Info textures incorrect", game, 1);
+	if (!closed_by_walls(game))
+		ft_exit("map is not closed/surrounded by walls", game, 1);
+	if (!map_info(game->map))
+		ft_exit("Info map in wrong format", game, 1);
 }
