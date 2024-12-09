@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_map_reading.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:23 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 13:33:19 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:36:28 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:10:35 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:03:06 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void render_wall(t_game *game, t_ray *ray, int x)
 		int map_x = (int)(ray->ray_x / BLOCK_SIZE);
         int map_y = (int)(ray->ray_y / BLOCK_SIZE);														 // cheking the ray assignement
 		ray->tex_y = (int)pos % BLOCK_SIZE;
-        if (game->map[map_y][map_x] == 'D' && !game->d.open)
+        if (game->map[map_y][map_x] == 'D' && !game->d[game->d_index]->open)
 		{ 
 			color = get_pixel_image_door(game, &game->ray);
             put_pixel(x, ray->start_wall, color, game);								 // using binary AND op to ensure pixel not get out of TILE_HEIGHT

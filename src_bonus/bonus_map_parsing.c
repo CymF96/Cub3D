@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_map_parsing.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:41 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 13:22:30 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:56:52 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,12 +126,51 @@ void find_player_position(t_game *game)
 				game->player_pos++;
 			}
 			else if (game->map[i][j] == 'D')
-			{
-				game->d.x = (j + 0.5) * BLOCK_SIZE;
-				game->d.y = (i + 0.5) * BLOCK_SIZE;
-			}
+				game->nbr_doors++;
 			j++;
 		}
 		i++;
+	}
+}
+
+void init_door_struct(t_game *game)
+{
+	int i;
+
+	game->d = malloc(sizeof(t_door *) * (game->nbr_doors + 1));
+	if (game->d == NULL)
+		ft_exit("Init door struct failed", game, 1);
+	i = 0;
+	while (i < game->nbr_doors)
+	{
+		game->d[i] = malloc(sizeof(t_door));
+		if (game->d[i] == NULL)
+			ft_exit("Malloc door failed", game, 1);
+		door_init(game->d[i]);
+		i++;
+	}
+	game->d[i] = NULL;
+}
+
+void	find_doors_position(t_game *game)
+{
+	int	i;
+	int	y;
+	int x;
+
+	i = 0;
+	y = -1;
+	while (game->map[++y] && game->d[i] != NULL)
+	{
+		x = -1;
+		while (game->map[y][++x])
+		{
+			if (game->map[y][x] == 'D')
+			{
+				game->d[i]->x = (x + 0.5) * BLOCK_SIZE;
+				game->d[i]->y = (y + 0.5) * BLOCK_SIZE;
+				i++;
+			}
+		}
 	}
 }

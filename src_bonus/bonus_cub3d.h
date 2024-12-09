@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_cub3d.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 13:23:02 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:25:07 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ typedef struct s_game t_game;
 
 typedef struct s_door
 {
-	int	x;
-	int	y;
+	float	x;
+	float	y;
 	bool	open;
 	struct timeval open_time;	
 }	t_door;
@@ -123,7 +123,9 @@ typedef struct s_game
 	t_tex *door;
 	t_ray ray;
 	t_player player;
-	t_door d;
+	t_door **d;
+	int	nbr_doors;
+	int	d_index;
 	void *img;
 	int bpp;
 	int size_line;
@@ -192,5 +194,9 @@ void check_door_timeout(t_game *game);
 int	get_pixel_image_door(t_game *game, t_ray *ray);
 void	door_movement(t_game *game, t_player *player);
 void find_player_position(t_game *game);
+void	init_door_struct(t_game *game);
+void	find_doors_position(t_game *game);
+void	door_init(t_door *d);
+
 
 #endif

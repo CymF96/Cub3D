@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_map_checker.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 13:29:14 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:36:39 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,8 @@ void check_map_rules(t_game *game)
 	find_player_position(game);
 	if (game->player_pos != 1)
 		ft_exit("Info player incorrect", game, 1);
+	init_door_struct(game);
+	find_doors_position(game);
 	if (!closed_by_walls(game))
 		ft_exit("map is not closed/surrounded by walls", game, 1);
 	if (!map_info(game->map))
