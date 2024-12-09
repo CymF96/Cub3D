@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:26 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:09:13 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 10:54:28 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,25 @@ void free_game_struct(t_game *game)
 	}
 }
 
+void	clean_doors(t_game *game)
+{
+	int i;
+
+	i = 0;
+	while (game->d[i])
+		free(game->d[i++]);
+	free(game->d);
+	game->d = NULL;	
+}
+
 void clean_game(t_game *game)
 {
 	if (game->line != NULL)
 		free(game->line);
 	if (game->map != NULL)
 		clean_map(game);
+	if (game->d != NULL)
+		clean_doors(game);
 	if (game->north || game->south \
 		|| game->west || game->east)
 		destroy_img(game);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   bonus_init_structure.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 13:14:09 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/09 09:40:01 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ void	init_player(t_player *player, t_game *game)
 void	door_init(t_door *d)
 {
 	d->open = false;
+	d->x = 0;
+	d->y = 0;
 }
 
 void	initialization(t_game *game)
@@ -89,6 +91,9 @@ void	initialization(t_game *game)
 	game->map = NULL;
 	game->line = NULL;
 	game->flag = false;
+	game->d = NULL;
+	game->nbr_doors = 0;
+	game->d_index = 0;
 	game->map_height = 0;
 	game->bpp = 0;
 	game->size_line = 0;
@@ -99,5 +104,4 @@ void	initialization(t_game *game)
 	ft_memset(game->f, -1, sizeof(game->f));
 	ft_memset(game->c, -1, sizeof(game->c));
 	ray_init(&game->ray);
-	door_init(&game->d);
 }
