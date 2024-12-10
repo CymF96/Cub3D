@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 12:28:07 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 12:30:30 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,9 @@
 # include <stdlib.h>
 # include <math.h>
 # include <unistd.h>
-# include <stdio.h>
 # include <stdbool.h>
-# include <sys/time.h>
-# include <errno.h>
-# include <fcntl.h>
 # include <X11/keysym.h>
 # include <X11/X.h>
-# include <limits.h>
 # include "../minilibx-linux/mlx.h"
 # include "../libft/libft.h"
 
