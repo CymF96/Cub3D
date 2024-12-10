@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 10:19:45 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:12:15 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,11 @@ void	ray_init(t_ray *ray)
 {
 	ray->ray_x = 0;
 	ray->ray_y = 0;
-	ray->cos_a = 0;
-	ray->sin_a = 0;
 	ray->delta_x = 0;
 	ray->delta_y = 0;
-	ray->angle = 0;
-	ray->dist = 0;
-	ray->cos_angle = 0;
-	ray->sin_angle = 0;
+	ray->tan_angle = 0;
 	ray->height_wall = 0;
 	ray->fov = PI / 3;
-	ray->start_x = 0;
 	ray->step = 0;
 	ray->wall_dist = 0;
 	ray->start_wall = 0;
@@ -35,18 +29,12 @@ void	ray_init(t_ray *ray)
 	ray->tex_id = 0;
 	ray->tex_x = 0;
 	ray->tex_y = 0;
-}
-
-//init texture structure
-void	init_texture(t_tex *texture)
-{
-	texture->img = NULL;
-	texture->bpp = 0;
-	texture->size_line = 0;
-	texture->endian = 0;
-	texture->data = NULL;
-	texture->width = 0;
-	texture->height = 0;
+	ray->hit_x = 0;
+	ray->hit_y = 0;
+	ray->map_x = 0;
+	ray->map_y = 0;
+	ray->color = 0;
+	ray->pos = 0;
 }
 
 void	init_player(t_player *player, t_game *game)
@@ -64,13 +52,43 @@ void	init_player(t_player *player, t_game *game)
 	player->angle_speed = 0.1;
 	player->angle = 0;
 	player->game = game;
+	player->new_x = 0;
+	player->new_y = 0;
 }
 
-void	door_init(t_door *d)
+void	map_init(t_mini *m)
 {
-	d->open = false;
-	d->x = 0;
-	d->y = 0;
+	m->m_tile = 8;
+	m->m_x = 0;
+	m->m_y = 0;
+	m->m_dir_x = 0;
+	m->m_dir_y = 0;
+	m->m_player_x = 0;
+	m->m_player_y = 0;
+}
+
+void	initialization_bis(t_game *game)
+{
+	game->d = NULL;
+	game->gun_frame = 0;
+	gettimeofday(&game->last_frame_time, NULL);
+	game->accumulated_time = 0;
+	game->nbr_doors = 0;
+	game->d_index = 0;
+	game->map_height = 0;
+	game->bpp = 0;
+	game->size_line = 0;
+	game->endian = 0;
+	game->player_pos = 0;
+	game->mouse_delta_x = 0;
+	game->last_mouse_x = WIDTH / 2;
+	game->gun_x_start = (WIDTH - 640) / 2;
+	game->gun_y_start = (HEIGHT - 505);
+	game->gun_color = 0;
+	ft_memset(game->f, -1, sizeof(game->f));
+	ft_memset(game->c, -1, sizeof(game->c));
+	ray_init(&game->ray);
+	map_init(&game->m_map);
 }
 
 void	initialization(t_game *game)
@@ -94,20 +112,5 @@ void	initialization(t_game *game)
 	game->dr = NULL;
 	game->map = NULL;
 	game->line = NULL;
-	game->flag = false;
-	game->d = NULL;
-	game->gun_frame = 0;
-	gettimeofday(&game->last_frame_time, NULL);
-	game->nbr_doors = 0;
-	game->d_index = 0;
-	game->map_height = 0;
-	game->bpp = 0;
-	game->size_line = 0;
-	game->endian = 0;
-	game->player_pos = 0;
-	game->mouse_delta_x = 0;
-	game->last_mouse_x = WIDTH / 2;
-	ft_memset(game->f, -1, sizeof(game->f));
-	ft_memset(game->c, -1, sizeof(game->c));
-	ray_init(&game->ray);
+	initialization_bis(game);
 }

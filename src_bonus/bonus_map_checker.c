@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/09 10:36:39 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 14:50:58 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool	closed_by_walls(t_game *game)
 	int	j;
 
 	i = -1;
-	while (game->map[++i] != NULL) 
+	while (game->map[++i] != NULL)
 	{
 		j = -1;
 		while (game->map[i][++j] != '\0')
@@ -104,21 +104,4 @@ int	map_info(char **map)
 		}
 	}
 	return (1);
-}
-
-
-//main function to analyse the input from gnl
-void check_map_rules(t_game *game)
-{
-	if (!check_texture(game))
-		ft_exit("Info textures incorrect", game, 1);
-	find_player_position(game);
-	if (game->player_pos != 1)
-		ft_exit("Info player incorrect", game, 1);
-	init_door_struct(game);
-	find_doors_position(game);
-	if (!closed_by_walls(game))
-		ft_exit("map is not closed/surrounded by walls", game, 1);
-	if (!map_info(game->map))
-		ft_exit("Info map in wrong format", game, 1);
 }

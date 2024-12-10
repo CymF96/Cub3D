@@ -6,27 +6,16 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:26 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 10:23:36 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:05:12 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus_cub3d.h"
 
-void clean_map(t_game *game)
+void	clear_image(t_game *game)
 {
-	int i;
-
-	i = 0;
-	while (game->map[i] != NULL)
-		free(game->map[i++]);
-	free(game->map);
-	game->map = NULL;
-}
-
-void clear_image(t_game *game)
-{
-	int y;
-	int x;
+	int	y;
+	int	x;
 
 	y = -1;
 	while (++y < HEIGHT)
@@ -37,28 +26,8 @@ void clear_image(t_game *game)
 	}
 }
 
-void destroy_img(t_game *game)
+void	destroy_img_bis(t_game *game)
 {
-	if (game->north != NULL && game->north->img != NULL)
-	{
-		mlx_destroy_image(game->mlx, game->north->img);
-		free(game->north);
-	}
-	if (game->south != NULL && game->south->img != NULL)
-	{
-		mlx_destroy_image(game->mlx, game->south->img);
-		free(game->south);
-	}
-	if (game->west != NULL && game->west->img != NULL)
-	{
-		mlx_destroy_image(game->mlx, game->west->img);
-		free(game->west);
-	}
-	if (game->east != NULL && game->east->img != NULL)
-	{
-		mlx_destroy_image(game->mlx, game->east->img);
-		free(game->east);
-	}
 	if (game->door != NULL && game->door->img != NULL)
 	{
 		mlx_destroy_image(game->mlx, game->door->img);
@@ -81,21 +50,32 @@ void destroy_img(t_game *game)
 	}
 }
 
-void free_textures(t_game *game)
+void	destroy_img(t_game *game)
 {
-	if (game->no)
-		free(game->no);
-	if (game->so)
-		free(game->so);
-	if (game->we)
-		free(game->we);
-	if (game->ea)
-		free(game->ea);
-	if (game->dr)
-		free(game->dr);
+	if (game->north != NULL && game->north->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->north->img);
+		free(game->north);
+	}
+	if (game->south != NULL && game->south->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->south->img);
+		free(game->south);
+	}
+	if (game->west != NULL && game->west->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->west->img);
+		free(game->west);
+	}
+	if (game->east != NULL && game->east->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->east->img);
+		free(game->east);
+	}
+	destroy_img_bis(game);
 }
 
-void free_game_struct(t_game *game)
+void	free_game_struct(t_game *game)
 {
 	if (game->img != NULL)
 	{
@@ -116,31 +96,4 @@ void free_game_struct(t_game *game)
 			game->mlx = NULL;
 		}
 	}
-}
-
-void	clean_doors(t_game *game)
-{
-	int i;
-
-	i = 0;
-	while (game->d[i])
-		free(game->d[i++]);
-	free(game->d);
-	game->d = NULL;	
-}
-
-void clean_game(t_game *game)
-{
-	if (game->line != NULL)
-		free(game->line);
-	if (game->map != NULL)
-		clean_map(game);
-	if (game->d != NULL)
-		clean_doors(game);
-	if (game->north || game->south \
-		|| game->west || game->east)
-		destroy_img(game);
-	free_textures(game);
-	free_game_struct(game);
-	game = NULL;
 }

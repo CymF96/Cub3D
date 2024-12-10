@@ -6,47 +6,49 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/04 11:10:11 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/04 11:10:15 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 16:27:27 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bonus_cub3d.h"
+#include <stdio.h>
 
-void draw_tile(int x, int y, int mini_tile, int color, t_game *game)
+void	draw_tile(int x, int y, t_mini *m, t_game *game)
 {
-	int dx;
-	int dy;
+	int	dx;
+	int	dy;
 
 	dx = 0;
-	while (dx < mini_tile)
+	while (dx < m->m_tile)
 	{
 		dy = 0;
-		while (dy < mini_tile)
+		while (dy < m->m_tile)
 		{
-			put_pixel(x + dx, y + dy, color, game);
+			put_pixel(x + dx, y + dy, m->m_color, game);
 			dy++;
 		}
 		dx++;
 	}
 }
 
-int get_tile_color(char tile_type)
+int	get_tile_color(char tile_type)
 {
 	if (tile_type == '1')
 		return (0xFFFFFF);
-	else if (tile_type == '0' || tile_type == 'N' || tile_type == 'S' ||
-			 tile_type == 'E' || tile_type == 'W')
+	else if (tile_type == '0' || tile_type == 'N' || tile_type == 'S' \
+			|| tile_type == 'E' || tile_type == 'W')
 		return (0x444444);
+	else if (tile_type == 'D')
+		return (0x50E0FF);
 	return (0);
 }
 
-void draw_map_tiles(t_game *game, int mini_tile, int mini_x, int mini_y)
+void	draw_map_tiles(t_game *game, t_mini *m)
 {
-	int i;
-	int j;
-	int x;
-	int y;
-	int color;
+	int	i;
+	int	j;
+	int	x;
+	int	y;
 
 	i = -1;
 	while (game->map[++i])
@@ -54,18 +56,18 @@ void draw_map_tiles(t_game *game, int mini_tile, int mini_x, int mini_y)
 		j = -1;
 		while (game->map[i][++j])
 		{
-			x = mini_x + j * mini_tile;
-			y = mini_y + i * mini_tile;
-			color = get_tile_color(game->map[i][j]);
-			draw_tile(x, y, mini_tile, color, game);
+			x = m->m_x + j * m->m_tile;
+			y = m->m_y + i * m->m_tile;
+			m->m_color = get_tile_color(game->map[i][j]);
+			draw_tile(x, y, m, game);
 		}
 	}
 }
 
-void draw_player_dot(t_game *game, int player_x, int player_y)
+void	draw_player_dot(t_game *game, int player_x, int player_y)
 {
-	int dx;
-	int dy;
+	int	dx;
+	int	dy;
 
 	dx = -2;
 	while (dx <= 2)
@@ -80,41 +82,22 @@ void draw_player_dot(t_game *game, int player_x, int player_y)
 	}
 }
 
-void draw_direction_line(t_game *game, int player_x, int player_y, int dir_x, int dir_y)
+void	draw_minimap(t_game *game, t_mini *m)
 {
-	int i;
+	int	i;
 
 	i = 0;
+	draw_map_tiles(game, m);
+	m->m_player_x = m->m_x + (game->player.x / BLOCK_SIZE) * m->m_tile;
+	m->m_player_y = m->m_y + (game->player.y / BLOCK_SIZE) * m->m_tile;
+	draw_player_dot(game, m->m_player_x, m->m_player_y);
+	m->m_dir_x = m->m_player_x + cos(game->player.angle) * 5;
+	m->m_dir_y = m->m_player_y + sin(game->player.angle) * 5;
 	while (i < 5)
 	{
-		put_pixel(player_x + (dir_x - player_x) * i / 5,
-				  player_y + (dir_y - player_y) * i / 5,
-				  0xFFFF00, game);
+		put_pixel(m->m_player_x + (m->m_dir_x - m->m_player_x) * i / 5, \
+				m->m_player_y + (m->m_dir_y - m->m_player_y) * i / 5, \
+				0xFFFF00, game);
 		i++;
 	}
-}
-
-void draw_minimap(t_game *game)
-{
-	int mini_tile;
-	int mini_x;
-	int mini_y;
-	int player_x;
-	int player_y;
-	int dir_x;
-	int dir_y;
-
-	mini_tile = 8;
-	mini_x = 0;
-	mini_y = 0;
-
-	draw_map_tiles(game, mini_tile, mini_x, mini_y);
-
-	player_x = mini_x + (game->player.x / BLOCK_SIZE) * mini_tile;
-	player_y = mini_y + (game->player.y / BLOCK_SIZE) * mini_tile;
-	draw_player_dot(game, player_x, player_y);
-
-	dir_x = player_x + cos(game->player.angle) * 5;
-	dir_y = player_y + sin(game->player.angle) * 5;
-	draw_direction_line(game, player_x, player_y, dir_x, dir_y);
 }
