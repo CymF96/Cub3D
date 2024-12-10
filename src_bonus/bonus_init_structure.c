@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/09 09:40:01 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 10:19:45 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	init_player(t_player *player, t_game *game)
 	player->ro_left = false;
 	player->ro_right = false;
 	player->door = false;
+	player->shot = false;
 	player->speed = 3;
 	player->angle_speed = 0.1;
 	player->angle = 0;
@@ -83,6 +84,9 @@ void	initialization(t_game *game)
 	game->west = NULL;
 	game->east = NULL;
 	game->door = NULL;
+	game->gun1 = NULL;
+	game->gun2 = NULL;
+	game->shot1 = NULL;
 	game->no = NULL;
 	game->so = NULL;
 	game->we = NULL;
@@ -92,6 +96,8 @@ void	initialization(t_game *game)
 	game->line = NULL;
 	game->flag = false;
 	game->d = NULL;
+	game->gun_frame = 0;
+	gettimeofday(&game->last_frame_time, NULL);
 	game->nbr_doors = 0;
 	game->d_index = 0;
 	game->map_height = 0;

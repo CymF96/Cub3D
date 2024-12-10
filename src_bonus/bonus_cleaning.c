@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:26 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/09 10:54:28 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 10:23:36 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,21 @@ void destroy_img(t_game *game)
 	{
 		mlx_destroy_image(game->mlx, game->door->img);
 		free(game->door);
+	}
+	if (game->gun1 != NULL && game->gun1->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->gun1->img);
+		free(game->gun1);
+	}
+	if (game->gun2 != NULL && game->gun2->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->gun2->img);
+		free(game->gun2);
+	}
+	if (game->shot1 != NULL && game->shot1->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->shot1->img);
+		free(game->shot1);
 	}
 }
 

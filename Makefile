@@ -39,6 +39,7 @@ CFILESB = 	src_bonus/bonus_cub3d.c\
 			src_bonus/bonus_mouse.c\
 			src_bonus/bonus_minimap.c\
 			src_bonus/bonus_door.c\
+			src_bonus/bonus_gun_sprite.c\
 			src_bonus/bonus_utils.c\
 
 OFILES = $(patsubst src/%.c, $(OBJDIR)/%.o, $(CFILES))
