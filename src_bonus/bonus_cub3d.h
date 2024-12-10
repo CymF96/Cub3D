@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/09 10:25:07 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 10:22:55 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_player
 	bool left;
 	bool exit;
 	bool door;
+	bool shot;
 	bool ro_left;
 	bool ro_right;
 	char direction;
@@ -121,11 +122,16 @@ typedef struct s_game
 	t_tex *west;
 	t_tex *east;
 	t_tex *door;
+	t_tex *gun1;
+	t_tex *gun2;
+	t_tex *shot1;
 	t_ray ray;
 	t_player player;
 	t_door **d;
 	int	nbr_doors;
 	int	d_index;
+	int	gun_frame;
+	struct timeval last_frame_time;
 	void *img;
 	int bpp;
 	int size_line;
@@ -197,6 +203,8 @@ void find_player_position(t_game *game);
 void	init_door_struct(t_game *game);
 void	find_doors_position(t_game *game);
 void	door_init(t_door *d);
-
+void	draw_gun(t_game *game);
+void	update_gun_frame(t_game *game);
+int	handle_shoot(int button, int x, int y, t_game *game);
 
 #endif

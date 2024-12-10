@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:40 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/09 10:03:06 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 11:09:27 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,7 +152,6 @@ int draw_game(t_game *game)
 	// creating the final img pointer and data addrs to be use for screen display
 	game->img = mlx_new_image(game->mlx, WIDTH, HEIGHT);
 	game->data = mlx_get_data_addr(game->img, &game->bpp, &game->size_line, &game->endian);
-
 	// as floor and ceiling are always in the screen, they are draw separatly before the wall rendering
 	draw_floor(game);
 	draw_ceiling(game);
@@ -169,6 +168,8 @@ int draw_game(t_game *game)
 	move_player(&game->player);
 	door_movement(game, &game->player);
 	check_door_timeout(game);
+	update_gun_frame(game);
+	draw_gun(game);
 	// put final image to window
 	mlx_put_image_to_window(game->mlx, game->win, game->img, 0, 0);
 	mlx_destroy_image(game->mlx, game->img);
