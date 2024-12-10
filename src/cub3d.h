@@ -19,8 +19,8 @@
 # include <stdbool.h>
 # include <X11/keysym.h>
 # include <X11/X.h>
-# include "../minilibx-linux/mlx.h"
-# include "../libft/libft.h"
+# include "../includes/minilibx-linux/mlx.h"
+# include "../includes/libft/libft.h"
 
 # define WIDTH 1600
 # define HEIGHT 1000
