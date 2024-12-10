@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_structure.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:35 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 11:21:40 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 12:27:51 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,17 +16,11 @@ void	ray_init(t_ray *ray)
 {
 	ray->ray_x = 0;
 	ray->ray_y = 0;
-	ray->cos_a = 0;
-	ray->sin_a = 0;
 	ray->delta_x = 0;
 	ray->delta_y = 0;
-	ray->angle = 0;
-	ray->dist = 0;
-	ray->cos_angle = 0;
-	ray->sin_angle = 0;
+	ray->tan_angle = 0;
 	ray->height_wall = 0;
 	ray->fov = PI / 3;
-	ray->start_x = 0;
 	ray->step = 0;
 	ray->wall_dist = 0;
 	ray->start_wall = 0;
@@ -35,9 +29,10 @@ void	ray_init(t_ray *ray)
 	ray->tex_id = 0;
 	ray->tex_x = 0;
 	ray->tex_y = 0;
+	ray->hit_x = 0;
+	ray->hit_y = 0;
 }
 
-//init texture structure
 void	init_texture(t_tex *texture)
 {
 	texture->img = NULL;
@@ -76,7 +71,6 @@ void	initialization(t_game *game)
 	game->east = NULL;
 	game->no = NULL;
 	game->so = NULL;
-	game->flag = false;
 	game->we = NULL;
 	game->ea = NULL;
 	game->map = NULL;

@@ -23,6 +23,8 @@ CFILES =	src/cub3d.c\
 			src/textures.c\
 			src/pixel_img.c\
 			src/raycasting.c\
+			src/key_event.c\
+			src/draw_elements.c\
 			src/utils.c\
 			
 CFILESB = 	src_bonus/bonus_cub3d.c\

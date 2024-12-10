@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   cleaning.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:26 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/03 17:35:14 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 11:23:14 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void clean_map(t_game *game)
+void	clean_map(t_game *game)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (game->map[i] != NULL)
@@ -23,10 +23,10 @@ void clean_map(t_game *game)
 	game->map = NULL;
 }
 
-void clear_image(t_game *game)
+void	clear_image(t_game *game)
 {
-	int y;
-	int x;
+	int	y;
+	int	x;
 
 	y = -1;
 	while (++y < HEIGHT)
@@ -37,7 +37,7 @@ void clear_image(t_game *game)
 	}
 }
 
-void destroy_img(t_game *game)
+void	destroy_img(t_game *game)
 {
 	if (game->north != NULL && game->north->img != NULL)
 	{
@@ -61,7 +61,7 @@ void destroy_img(t_game *game)
 	}
 }
 
-void free_textures(t_game *game)
+void	free_textures(t_game *game)
 {
 	if (game->no)
 		free(game->no);
@@ -73,7 +73,7 @@ void free_textures(t_game *game)
 		free(game->ea);
 }
 
-void free_game_struct(t_game *game)
+void	free_game_struct(t_game *game)
 {
 	if (game->img != NULL)
 	{
@@ -94,18 +94,4 @@ void free_game_struct(t_game *game)
 			game->mlx = NULL;
 		}
 	}
-}
-
-void clean_game(t_game *game)
-{
-	if (game->line != NULL)
-		free(game->line);
-	if (game->map != NULL)
-		clean_map(game);
-	if (game->north || game->south \
-		|| game->west || game->east)
-		destroy_img(game);
-	free_textures(game);
-	free_game_struct(game);
-	game = NULL;
 }

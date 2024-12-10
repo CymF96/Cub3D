@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:52 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/03 09:45:06 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 11:23:23 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,20 @@ void	*safe_malloc(size_t size, t_game *game)
 	if (ptr == NULL)
 		ft_exit("malloc failed", game, 1);
 	return (ptr);
+}
+
+void	clean_game(t_game *game)
+{
+	if (game->line != NULL)
+		free(game->line);
+	if (game->map != NULL)
+		clean_map(game);
+	if (game->north || game->south \
+		|| game->west || game->east)
+		destroy_img(game);
+	free_textures(game);
+	free_game_struct(game);
+	game = NULL;
 }
 
 void	ft_exit(const char *str, t_game *game, int flag)

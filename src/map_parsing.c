@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   map_parsing.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:41 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 11:44:16 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 11:28:20 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-//copying map by using a temp map that is increase at every line met
 void	copy_map(t_game *game, char *line)
 {
 	char	**temp_map;
@@ -102,10 +101,10 @@ int	texture_info(t_game *game, char *line, int i)
 	return (1);
 }
 
-void find_player_position(t_game *game)
+void	find_player_position(t_game *game)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	if (!game->map)
