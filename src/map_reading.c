@@ -3,34 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   map_reading.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:23 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 12:49:01 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 12:27:41 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-/*DEBUGGING -- PRINTING MAP FILE INFO*/
-// for (int i = 0; game->map[i] != NULL; i++)
-// 	printf("%s", game->map[i]);
-// printf("\n");
-// for (int i = 0; i < 3; i++)
-// 	printf("%d, ", game->f[i]);
-// printf("\n");
-// for (int i = 0; i < 3; i++)
-// 	printf("%d, ", game->c[i]);
-// printf("\n%s\n%s\n%s\n%s\n", game->no, game->so, game->we, game->ea);
-/**DEBUGGING -- PRINTING MAP FILE INFO*/
-
 
 void	analyse_line(t_game *game, char *line)
 {
 	int	i;
 
 	i = 0;
-	while (line[i] != '\0' && line[i] == ' ') //as long as there is space and it is not the end of the line continue
+	while (line[i] != '\0' && line[i] == ' ')
 		i++;
 	if (line && line[i] == '1' && game->no && game->so && game->we && \
 		game->ea && game->f[0] != -1 && game->f[1] != -1 && \
@@ -46,14 +33,10 @@ void	analyse_line(t_game *game, char *line)
 		return ;
 	}
 	if (line[i] != '\0' || line[i] != '\n')
-	{
-		game->flag = true;
 		return ;
-	} // checking if we got a texture information like nroth path or ceiling rgb color 
 }
 
-// Reading file line by line to parse information in variable
-void readmap(t_game *game, int fd)
+void	readmap(t_game *game, int fd)
 {
 	game->line = get_next_line(fd);
 	if (game->line == NULL)
@@ -68,16 +51,16 @@ void readmap(t_game *game, int fd)
 	game->line = NULL;
 }
 
-bool map_format(char *input)
+bool	map_format(char *input)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (input[i])
 	{
 		if (input[i] == '.')
 		{
-			if (ft_strlen(input + i) == 4 &&
+			if (ft_strlen(input + i) == 4 && \
 				!ft_strncmp(".cub", input + i, 4) && input[i + 4] == '\0')
 				return (true);
 		}
@@ -85,22 +68,30 @@ bool map_format(char *input)
 	}
 	return (false);
 }
-// find player and convert the position coordinate into screen + set direction for later initialization
-bool map_validation(t_game *game, char *input)
-{
-	int fd;
 
-	// check if the map is in correct .cub format
+void	check_map_rules(t_game *game)
+{
+	if (game->player_pos != 1)
+		ft_exit("Info player incorrect", game, 1);
+	if (!check_texture(game))
+		ft_exit("Info textures incorrect", game, 1);
+	if (!closed_by_walls(game))
+		ft_exit("map is not closed/surrounded by walls", game, 1);
+	if (!map_info(game->map))
+		ft_exit("Info map in wrong format", game, 1);
+}
+
+bool	map_validation(t_game *game, char *input)
+{
+	int	fd;
+
 	if (!map_format(input))
 		ft_exit("Map format isn't correct.", game, 1);
 	fd = open(input, O_RDONLY);
 	if (fd < 0)
 		ft_exit("Map file can't be read.", game, 1);
-	// read the file and add element to correct variable in the structure + setup map char **
 	readmap(game, fd);
 	find_player_position(game);
-	// additionnal map checking
 	check_map_rules(game);
-	// init the player position for raycasting calculation
 	return (true);
 }

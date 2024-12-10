@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   map_checker.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cofische <cofische@student.42.fr>          +#+  +:+       +#+        */
+/*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/05 13:01:30 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 11:57:55 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-bool	closed_by_walls(t_game *game)
+int	closed_by_walls(t_game *game)
 {
 	int	i;
 	int	j;
@@ -24,20 +24,20 @@ bool	closed_by_walls(t_game *game)
 		while (game->map[i][++j] != '\0')
 		{
 			if (i == 0 && game->map[i][j] == '0')
-				return (false);
+				return (0);
 			else if (game->map[i + 1] == NULL && game->map[i][j] == '0')
-				return (false);
+				return (0);
 			else if (game->map[i][j] == ' ')
 			{
 				if (i != 0 && game->map[i - 1][j] == '0')
-					return (false);
+					return (0);
 				else if (game->map[i + 1] != NULL \
 						&& game->map[i + 1][j] == '0')
-					return (false);
+					return (0);
 			}
 		}
 	}
-	return (true);
+	return (1);
 }
 
 int	check_color_format(int *array)
@@ -71,7 +71,7 @@ int	check_texture(t_game *game)
 {
 	if (!game->no || !game->so || !game->we || ! game->ea)
 		return (0);
-	else if (!check_file(game->no) || !check_file(game->so)\
+	else if (!check_file(game->no) || !check_file(game->so) \
 			|| !check_file(game->we) || !check_file(game->ea))
 		return (0);
 	else if (!check_color_format(game->c) || !check_color_format(game->f))
@@ -97,26 +97,9 @@ int	map_info(char **map)
 				&& map[i][j] != '1' && map[i][j] != 'N' \
 				&& map[i][j] != 'S' && map[i][j] != 'W' \
 				&& map[i][j] != 'E')
-			{
-				printf("%c\n", map[i][j]);
 				return (0);
-			}
 			j++;
 		}
 	}
 	return (1);
-}
-
-
-//main function to analyse the input from gnl
-void check_map_rules(t_game *game)
-{
-	if (game->player_pos != 1)
-		ft_exit("Info player incorrect", game, 1);
-	if (!check_texture(game))
-		ft_exit("Info textures incorrect", game, 1);
-	if (!closed_by_walls(game))
-		ft_exit("map is not closed/surrounded by walls", game, 1);
-	if (!map_info(game->map))
-		ft_exit("Info map in wrong format", game, 1);
 }
