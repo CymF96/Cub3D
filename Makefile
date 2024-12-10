@@ -32,11 +32,15 @@ CFILESB = 	src_bonus/bonus_cub3d.c\
 			src_bonus/bonus_map_checker.c\
 			src_bonus/bonus_map_parsing.c\
 			src_bonus/bonus_map_reading.c\
+			src_bonus/bonus_map_utils.c\
 			src_bonus/bonus_cleaning.c\
+			src_bonus/bonus_cleaning_malloc.c\
 			src_bonus/bonus_game_ctrl.c\
+			src_bonus/bonus_key_event.c\
 			src_bonus/bonus_launch_game.c\
 			src_bonus/bonus_textures.c\
 			src_bonus/bonus_pixel_img.c\
+			src_bonus/bonus_draw_elements.c\
 			src_bonus/bonus_raycasting.c\
 			src_bonus/bonus_mouse.c\
 			src_bonus/bonus_minimap.c\

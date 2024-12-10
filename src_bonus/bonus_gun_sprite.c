@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 09:02:39 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:12:43 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/10 15:02:10 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,16 @@ void	load_gun_img(t_game *game)
 {
 	game->gun1 = safe_malloc(sizeof(t_tex), game);
 	init_texture(game->gun1);
-	game->gun1->img = mlx_xpm_file_to_image(game->mlx, "../textures/gun/gun_1.xpm", &game->gun1->width, &game->gun1->height);
-	game->gun1->data = mlx_get_data_addr(game->gun1->img, &game->gun1->bpp, &game->gun1->size_line, &game->gun1->endian);
+	game->gun1->img = mlx_xpm_file_to_image(game->mlx, \
+		"../textures/gun/gun_1.xpm", &game->gun1->width, &game->gun1->height);
+	game->gun1->data = mlx_get_data_addr(game->gun1->img, \
+		&game->gun1->bpp, &game->gun1->size_line, &game->gun1->endian);
 	game->gun2 = safe_malloc(sizeof(t_tex), game);
 	init_texture(game->gun2);
-	game->gun2->img = mlx_xpm_file_to_image(game->mlx, "../textures/gun/gun_2.xpm", &game->gun2->width, &game->gun2->height);
-	game->gun2->data = mlx_get_data_addr(game->gun2->img, &game->gun2->bpp, &game->gun2->size_line, &game->gun2->endian);
+	game->gun2->img = mlx_xpm_file_to_image(game->mlx, \
+		"../textures/gun/gun_2.xpm", &game->gun2->width, &game->gun2->height);
+	game->gun2->data = mlx_get_data_addr(game->gun2->img, \
+		&game->gun2->bpp, &game->gun2->size_line, &game->gun2->endian);
 }
 
 int	get_pixel_image_gun(t_tex *temp, int x, int y)
@@ -40,20 +44,18 @@ int	get_pixel_image_gun(t_tex *temp, int x, int y)
 
 void	update_gun_frame(t_game *game)
 {
-    struct timeval	current_time;
-    gettimeofday(&current_time, NULL);
-    double elapsed_time;
-	static double accumulated_time = 0;
+	struct timeval	current_time;
+	double			elapsed_time;
 
-	elapsed_time = (current_time.tv_sec - game->last_frame_time.tv_sec) +
-                          (current_time.tv_usec - game->last_frame_time.tv_usec) / 1e6;
-	accumulated_time += elapsed_time;
-
-    if (accumulated_time >= 0.45)
+	gettimeofday(&current_time, NULL);
+	elapsed_time = (current_time.tv_sec - game->last_frame_time.tv_sec) + \
+				(current_time.tv_usec - game->last_frame_time.tv_usec) / 1e6;
+	game->accumulated_time += elapsed_time;
+	if (game->accumulated_time >= 0.45)
 	{
-        game->gun_frame = 1;
-		if (accumulated_time >= 0.9)
-			accumulated_time = 0;
+		game->gun_frame = 1;
+		if (game->accumulated_time >= 0.9)
+			game->accumulated_time = 0;
 	}
 	else
 		game->gun_frame = 0;
@@ -62,12 +64,9 @@ void	update_gun_frame(t_game *game)
 
 void	draw_gun(t_game *game)
 {
-	t_tex *temp;
-	int	gun_x_start;
-	int gun_y_start;
-	int x;
-	int y;
-	int color;
+	t_tex	*temp;
+	int		x;
+	int		y;
 
 	if (game->player.shot)
 	{
@@ -78,17 +77,19 @@ void	draw_gun(t_game *game)
 		temp = game->gun1;
 	else
 		temp = game->gun2;
-	gun_x_start = (WIDTH - temp->width) / 2;
-	gun_y_start = (HEIGHT - temp->height);
 	y = -1;
 	while (++y < temp->height)
 	{
 		x = -1;
 		while (++x < temp->width)
 		{
-			color = get_pixel_image_gun(temp, x, y);
-			if ((unsigned int)color != 0xFF000000)
-            	put_pixel(gun_x_start + x, gun_y_start + y, color, game);	
+			game->gun_color = get_pixel_image_gun(temp, x, y);
+			if ((unsigned int)game->gun_color != 0xFF000000)
+				put_pixel(game->gun_x_start + x, game->gun_y_start + y, \
+					game->gun_color, game);
 		}
 	}
 }
+
+	// gun_x_start = (WIDTH - temp->width) / 2;
+	// gun_y_start = (HEIGHT - temp->height);
