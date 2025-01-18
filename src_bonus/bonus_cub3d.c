@@ -16,7 +16,7 @@ int	main(int ac, char **av)
 {
 	t_game	game;
 
-	if (ac < 2 || av[1] == NULL || av[1][0] == '\0')
+	if (ac < 2 || ac > 3 || av[1] == NULL || av[1][0] == '\0')
 		ft_exit("Missing arguments. Format: ./cub3D map_name.cub\n", NULL, 1);
 	initialization(&game);
 	map_validation(&game, av[1]);
