@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/28 08:21:43 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 16:08:12 by cofische         ###   ########.fr       */
+/*   Updated: 2024/12/15 11:20:53 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include "../includes/minilibx-linux/mlx.h"
 # include "../includes/libft/libft.h"
 
-# define WIDTH 1600
-# define HEIGHT 1000
+# define WIDTH 1900
+# define HEIGHT 1300
 # define BLOCK_SIZE 64
 # define STEP_SIZE 0.25
 # define MOUSE_SEN 0.015
