@@ -147,7 +147,6 @@ make debug
 
 - [Raycasting Tutorial](https://lodev.org/cgtutor/raycasting.html)
 - [Wolfenstein 3D's map renderer](https://github.com/id-Software/wolf3d)
-- [42 School cub3D Subject](https://cdn.intra.42.fr/pdf/pdf/960/en.subject.pdf)
 
 ## 📝 License
 
