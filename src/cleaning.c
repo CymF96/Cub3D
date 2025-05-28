@@ -6,22 +6,11 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:26 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:23:14 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:15:14 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
-void	clean_map(t_game *game)
-{
-	int	i;
-
-	i = 0;
-	while (game->map[i] != NULL)
-		free(game->map[i++]);
-	free(game->map);
-	game->map = NULL;
-}
 
 void	clear_image(t_game *game)
 {
@@ -34,6 +23,30 @@ void	clear_image(t_game *game)
 		x = -1;
 		while (++x < WIDTH)
 			put_pixel(x, y, 0, game);
+	}
+}
+
+void	destroy_img_bis(t_game *game)
+{
+	if (game->door != NULL && game->door->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->door->img);
+		free(game->door);
+	}
+	if (game->gun1 != NULL && game->gun1->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->gun1->img);
+		free(game->gun1);
+	}
+	if (game->gun2 != NULL && game->gun2->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->gun2->img);
+		free(game->gun2);
+	}
+	if (game->shot1 != NULL && game->shot1->img != NULL)
+	{
+		mlx_destroy_image(game->mlx, game->shot1->img);
+		free(game->shot1);
 	}
 }
 
@@ -59,18 +72,7 @@ void	destroy_img(t_game *game)
 		mlx_destroy_image(game->mlx, game->east->img);
 		free(game->east);
 	}
-}
-
-void	free_textures(t_game *game)
-{
-	if (game->no)
-		free(game->no);
-	if (game->so)
-		free(game->so);
-	if (game->we)
-		free(game->we);
-	if (game->ea)
-		free(game->ea);
+	destroy_img_bis(game);
 }
 
 void	free_game_struct(t_game *game)

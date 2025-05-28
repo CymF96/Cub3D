@@ -6,13 +6,13 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:38 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:57:55 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:14:23 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-int	closed_by_walls(t_game *game)
+bool	closed_by_walls(t_game *game)
 {
 	int	i;
 	int	j;
@@ -24,20 +24,20 @@ int	closed_by_walls(t_game *game)
 		while (game->map[i][++j] != '\0')
 		{
 			if (i == 0 && game->map[i][j] == '0')
-				return (0);
+				return (false);
 			else if (game->map[i + 1] == NULL && game->map[i][j] == '0')
-				return (0);
+				return (false);
 			else if (game->map[i][j] == ' ')
 			{
 				if (i != 0 && game->map[i - 1][j] == '0')
-					return (0);
+					return (false);
 				else if (game->map[i + 1] != NULL \
 						&& game->map[i + 1][j] == '0')
-					return (0);
+					return (false);
 			}
 		}
 	}
-	return (1);
+	return (true);
 }
 
 int	check_color_format(int *array)
@@ -69,10 +69,12 @@ int	check_file(char *filename)
 
 int	check_texture(t_game *game)
 {
-	if (!game->no || !game->so || !game->we || ! game->ea)
+	if (!game->no || !game->so || !game->we || ! game->ea \
+		|| !game->dr)
 		return (0);
 	else if (!check_file(game->no) || !check_file(game->so) \
-			|| !check_file(game->we) || !check_file(game->ea))
+			|| !check_file(game->we) || !check_file(game->ea) \
+			|| !check_file(game->dr))
 		return (0);
 	else if (!check_color_format(game->c) || !check_color_format(game->f))
 		return (0);
@@ -96,7 +98,7 @@ int	map_info(char **map)
 			if (map[i][j] != ' ' && map[i][j] != '0' \
 				&& map[i][j] != '1' && map[i][j] != 'N' \
 				&& map[i][j] != 'S' && map[i][j] != 'W' \
-				&& map[i][j] != 'E')
+				&& map[i][j] != 'E' && map[i][j] != 'D')
 				return (0);
 			j++;
 		}

@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:52 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:23:23 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:13:39 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,8 @@ void	clean_game(t_game *game)
 		free(game->line);
 	if (game->map != NULL)
 		clean_map(game);
+	if (game->d != NULL)
+		clean_doors(game);
 	if (game->north || game->south \
 		|| game->west || game->east)
 		destroy_img(game);
@@ -58,4 +60,12 @@ void	ft_exit(const char *str, t_game *game, int flag)
 		exit(EXIT_FAILURE);
 	else
 		exit(EXIT_SUCCESS);
+}
+
+long	get_time_in_seconds(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec);
 }

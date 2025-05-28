@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   bonus_cleaning_malloc.c                            :+:      :+:    :+:   */
+/*   cleaning_malloc.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/10 15:31:37 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 15:35:27 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:15:18 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bonus_cub3d.h"
+#include "cub3d.h"
 
 void	clean_doors(t_game *game)
 {
