@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:55 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 12:07:55 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:14:27 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	init_game(t_game *game)
 	game->south = load_tex(game, game->so);
 	game->west = load_tex(game, game->we);
 	game->east = load_tex(game, game->ea);
+	game->door = load_tex(game, game->dr);
+	game->gun1 = load_tex(game, "textures/gun/gun_1.xpm");
+	game->gun2 = load_tex(game, "textures/gun/gun_2.xpm");
+	game->shot1 = load_tex(game, "textures/gun/shot_1.xpm");
 }
 
 void	get_facing_direction(t_player *player, char c)
@@ -48,6 +52,8 @@ void	launch_game(t_game *game)
 	mlx_hook(game->win, 17, 0, cross_close_window, game);
 	mlx_hook(game->win, 2, 1L << 0, key_press, &game->player);
 	mlx_hook(game->win, 3, 1L << 1, key_release, &game->player);
+	mlx_mouse_hook(game->win, handle_shoot, game);
+	mlx_mouse_move(game->mlx, game->win, WIDTH / 2, HEIGHT / 2);
 	mlx_loop_hook(game->mlx, gameloop, game);
 	mlx_loop(game->mlx);
 }

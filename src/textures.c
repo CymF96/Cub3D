@@ -6,11 +6,22 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:49 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:34:15 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:13:44 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+void	init_texture(t_tex *texture)
+{
+	texture->img = NULL;
+	texture->bpp = 0;
+	texture->size_line = 0;
+	texture->endian = 0;
+	texture->data = NULL;
+	texture->width = 0;
+	texture->height = 0;
+}
 
 int	set_up_color(int *rgb)
 {

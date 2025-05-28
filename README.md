@@ -1,30 +1,17 @@
-# cub3D - 3D Raycasting Game Engine
+# Cub3D - 3D Raycasting Game Engine
 
-![](https://img.shields.io/badge/Language-C-blue.svg)
+A simplified 3D game engine inspired by Wolfenstein 3D, built from scratch in C using raycasting techniques and minilibx for graphics rendering. 
 
-![](https://img.shields.io/badge/42-School-000000.svg)
 
-![](https://img.shields.io/badge/build-passing-brightgreen.svg)
+## ✨ Game Features
 
-> A simplified 3D game engine inspired by Wolfenstein 3D, built from scratch in C using raycasting techniques and minilibx for graphics rendering.
-> 
-
-## 🎮 Demo
-
-**Gameplay Video:** [Watch Demo](https://your-demo-link.com/)
-
-*Experience classic first-person 3D navigation with smooth raycasting graphics*
-
-## ✨ Features
-
-- 🎯 **Raycasting Engine** - Real-time 3D rendering using 2D raycasting algorithms
-- 🎨 **Textured Walls** - Different textures for North, South, East, and West walls
-- 🖱️ **Mouse Look** - Smooth camera rotation with mouse movement
-- ⌨️ **WASD Controls** - Intuitive movement with keyboard input
-- 🚪 **Collision Detection** - Realistic wall collision system
-- 🗺️ **Map Parser** - Custom map format with configurable layouts
-- 🎮 **60 FPS Rendering** - Smooth gameplay experience
-- 🔄 **Real-time Graphics** - Live rendering without pre-computed frames
+- **Raycasting Engine** - Real-time 3D rendering using 2D raycasting algorithms
+- **Textured Walls** - Different textures for North, South, East, and West walls
+- **Mouse Look** - Smooth camera rotation with mouse movement
+- **WASD Controls** - Player's movements with keybaord event management 
+- **Collision Detection** - Realistic wall collision system
+- **Map Parser** - Custom map format with configurable layouts
+- **Minimap with live movement** - Display of a minimap showing player's movements
 
 ## 🛠️ Tech Stack
 
@@ -37,9 +24,8 @@
 
 **Graphics Techniques:**
 
-- DDA (Digital Differential Analyzer) algorithm
-- Bresenham's line algorithm for wall detection
-- Texture mapping and scaling
+- Grid Traversal Raycasting / DDA grid traversal
+- Texture mapping and scaling with fisheye correction
 - Frame buffer management
 
 ## 🚀 Quick Start
@@ -57,24 +43,12 @@
 1. **Clone the repository**
     
     ```bash
-    git clone https://github.com/yourusername/cub3D.git
+    git clone https://github.com/CymF96/Cub3D.git cub3D
     cd cub3D
     
     ```
     
-2. **Install MinilibX (if not already installed)**
-    
-    ```bash
-    # macOS
-    git clone https://github.com/42Paris/minilibx-linux.git mlx
-    
-    # Linux
-    sudo apt-get update
-    sudo apt-get install gcc make xorg libxext-dev libbsd-dev
-    
-    ```
-    
-3. **Build the project**
+2. **Build the project**
     
     ```bash
     make
@@ -84,7 +58,7 @@
 4. **Run the game**
     
     ```bash
-    ./cub3D maps/map.cub
+    ./cub3D maps/basic.cub
     
     ```
     
@@ -97,30 +71,11 @@
 | `S` | Move backward |
 | `A` | Strafe left |
 | `D` | Strafe right |
+| `E` | Open door |
 | `←` `→` | Rotate camera left/right |
 | `Mouse` | Look around (mouse movement) |
 | `ESC` | Exit game |
 
-## 📁 Project Structure
-
-```
-cub3D/
-├── src/
-│   ├── main.c              # Program entry point
-│   ├── parsing/            # Map file parsing
-│   ├── raycasting/         # Core raycasting engine
-│   ├── graphics/           # Rendering and display
-│   ├── events/             # Keyboard and mouse handling
-│   └── utils/              # Helper functions
-├── includes/
-│   └── cub3d.h            # Header definitions
-├── maps/                  # Sample map files
-├── textures/              # Wall texture images
-├── mlx/                   # MinilibX library
-├── Makefile
-└── README.md
-
-```
 
 ## 🗺️ Map Format
 
@@ -131,22 +86,23 @@ NO ./textures/north_wall.xpm
 SO ./textures/south_wall.xpm
 WE ./textures/west_wall.xpm
 EA ./textures/east_wall.xpm
+DO ./textures/doors.xpm
 
-C 220,100,0
+C 220,100,0 
 F 255,30,0
 
 1111111111
-1000000001
-1000N00001
-1000000001
+1010000001
+1010N00101
+10D0000001
 1111111111
 
 ```
 
-- `NO/SO/WE/EA`: Texture paths for each wall direction
+- `NO/SO/WE/EA/DO`: Texture paths for each wall direction and doors. File must be in .xpm format extension
 - `C`: Ceiling color (RGB)
 - `F`: Floor color (RGB)
-- `1`: Wall, `0`: Empty space
+- `1`: Wall, `0`: Empty space `E`: Doors
 - `N/S/E/W`: Player start position and orientation
 
 ## 🧮 Raycasting Algorithm
@@ -154,51 +110,18 @@ F 255,30,0
 The engine implements a classic raycasting approach:
 
 1. **Ray Generation** - Cast rays from player position at each screen column
-2. **DDA Traversal** - Step through grid cells until hitting a wall
+2. **Bresenham Approach** - Step through grid cells until hitting a wall with integer arithmetic
 3. **Distance Calculation** - Compute perpendicular distance to avoid fisheye effect
 4. **Wall Height** - Calculate wall slice height based on distance
 5. **Texture Mapping** - Apply appropriate wall texture with scaling
 
-## 🔧 Technical Details
-
-### Performance Optimizations
-
-- Integer-based calculations for speed
-- Lookup tables for trigonometric functions
-- Efficient memory management
-- Double buffering for smooth rendering
-
-### Mathematical Foundations
-
-- Vector mathematics for ray direction
-- Trigonometry for rotation and projection
-- Linear interpolation for texture scaling
-
-## 🧪 Testing
-
-```bash
-# Build and test with sample maps
-make test
-
-# Run with different map configurations
-./cub3D maps/simple.cub
-./cub3D maps/complex.cub
-./cub3D maps/maze.cub
-
-```
-
 ## 📱 Screenshots
 
-<details>
-<summary>Click to view screenshots</summary>
+![Gameplay Screenshot](screenshots/gameplay.png)
 
-### Main Gameplay
+![Door texture](screenshots/gameplay.png)
 
-### Different Textures
-
-### Map Overview
-
-</details>
+![Minimap View](screenshots/minimap.png)
 
 ## 🚀 Building and Compilation
 
@@ -220,16 +143,6 @@ make debug
 
 ```
 
-## 🤝 Contributing
-
-This project was developed as part of the 42 School curriculum. Contributions and improvements are welcome!
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/OptimizeRaycasting`)
-3. Commit your changes (`git commit -m 'Optimize raycasting performance'`)
-4. Push to the branch (`git push origin feature/OptimizeRaycasting`)
-5. Open a Pull Request
-
 ## 📚 Learning Resources
 
 - [Raycasting Tutorial](https://lodev.org/cgtutor/raycasting.html)
@@ -240,13 +153,12 @@ This project was developed as part of the 42 School curriculum. Contributions an
 
 This project is part of the 42 School curriculum and follows their academic guidelines.
 
-## 👨‍💻 Author
+## 👨‍💻 Authors
 
-**Your Name**
+**Coline Fischer** and **Vinicius Bass**
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- 42 Intra: [your42login](https://profile.intra.42.fr/users/your42login)
-- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- GitHub: [@CymF96](https://github.com/CymF96)
+- Github: [@Vinny-Bass] (https://github.com/Vinny-Bass)
 
 ## 🏆 42 School Project
 
@@ -257,8 +169,6 @@ This project is part of the 42 School common core curriculum, focusing on:
 - **C Programming** - Low-level memory management and optimization
 - **Mathematical Application** - Practical use of trigonometry and vectors
 
-**Grade:** [Your grade if you want to share]
+**Grade:** 120/100
 
 ---
-
-⭐ **Enjoyed exploring this 3D engine? Give it a star!** ⭐

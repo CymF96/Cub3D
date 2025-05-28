@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/12/10 11:32:13 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:32:52 by cofische         ###   ########.fr       */
+/*   Created: 2024/12/10 15:36:10 by cofische          #+#    #+#             */
+/*   Updated: 2025/05/28 11:14:32 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ int	key_press(int keycode, t_player *player)
 		player->left = true;
 	if (keycode == D)
 		player->right = true;
+	if (keycode == E)
+		player->door = true;
 	if (keycode == RIGHT)
 		player->ro_right = true;
 	if (keycode == LEFT)

@@ -6,7 +6,7 @@
 /*   By: cofische <cofische@student.42london.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/29 10:15:41 by cofische          #+#    #+#             */
-/*   Updated: 2024/12/10 11:28:20 by cofische         ###   ########.fr       */
+/*   Updated: 2025/05/28 11:14:18 by cofische         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	copy_map(t_game *game, char *line)
 	game->map[i] = NULL;
 }
 
-char	*ft_copy_path(t_game *game, char *line)
+char	*copy_path(t_game *game, char *line)
 {
 	int		i;
 	int		j;
@@ -56,7 +56,7 @@ char	*ft_copy_path(t_game *game, char *line)
 	return (temp);
 }
 
-void	ft_copy_color(int *str, char *line)
+void	copy_color(int *str, char *line)
 {
 	int	i;
 	int	j;
@@ -85,45 +85,20 @@ void	ft_copy_color(int *str, char *line)
 int	texture_info(t_game *game, char *line, int i)
 {
 	if (line[i] == 'N' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		game->no = ft_copy_path(game, line);
+		game->no = copy_path(game, line);
 	else if (line[i] == 'S' && line[i + 1] == 'O' && line[i + 2] == ' ')
-		game->so = ft_copy_path(game, line);
+		game->so = copy_path(game, line);
 	else if (line[i] == 'W' && line[i + 1] == 'E' && line[i + 2] == ' ')
-		game->we = ft_copy_path(game, line);
+		game->we = copy_path(game, line);
 	else if (line[i] == 'E' && line[i + 1] == 'A' && line[i + 2] == ' ')
-		game->ea = ft_copy_path(game, line);
+		game->ea = copy_path(game, line);
+	else if (line[i] == 'D' && line[i + 1] == 'O' && line[i + 2] == ' ')
+		game->dr = copy_path(game, line);
 	else if (line[i] == 'F')
-		ft_copy_color(game->f, line);
+		copy_color(game->f, line);
 	else if (line[i] == 'C')
-		ft_copy_color(game->c, line);
+		copy_color(game->c, line);
 	else
 		return (0);
 	return (1);
-}
-
-void	find_player_position(t_game *game)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	if (!game->map)
-		ft_exit("Map not generated", game, 1);
-	while (game->map[i] != NULL)
-	{
-		j = 0;
-		while (game->map[i][j] != '\0')
-		{
-			if (game->map[i][j] == 'N' || game->map[i][j] == 'S' \
-				|| game->map[i][j] == 'W' || game->map[i][j] == 'E')
-			{
-				game->player.x = (j + 0.5) * BLOCK_SIZE;
-				game->player.y = (i + 0.5) * BLOCK_SIZE;
-				game->player.direction = game->map[i][j];
-				game->player_pos++;
-			}
-			j++;
-		}
-		i++;
-	}
 }
