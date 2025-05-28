@@ -119,7 +119,7 @@ The engine implements a classic raycasting approach:
 
 ![Gameplay Screenshot](screenshots/gameplay.png)
 
-![Door texture](screenshots/gameplay.png)
+![Door texture](screenshots/doors.png)
 
 ![Minimap View](screenshots/minimap.png)
 
