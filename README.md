@@ -168,6 +168,6 @@ This project is part of the 42 School common core curriculum, focusing on:
 - **C Programming** - Low-level memory management and optimization
 - **Mathematical Application** - Practical use of trigonometry and vectors
 
-**Grade:** 120/100
+**Grade:** 125/100
 
 ---
